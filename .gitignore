@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Environment & secrets
+.env
+.env.local
+*.pem
+
+# ML model caches
+.cache/
+models/
+.sentence_transformers/
+
+# Django
+*.log
+db.sqlite3
+/staticfiles/
+/media/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
