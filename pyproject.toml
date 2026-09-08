@@ -3,7 +3,12 @@ name = "hepsearch"
 version = "0.1.0"
 description = "Semantic search over HEP literature (INSPIRE-HEP) with Django + DRF + pgvector."
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "django>=5.2,<5.3",
+    "django-environ>=0.14.0",
+    "djangorestframework>=3.18.1",
+    "psycopg[binary]>=3.3.5",
+]
 
 # This is a Django application, not a distributable library: the source lives
 # in apps/ and config/, not in an importable top-level "hepsearch" package.
@@ -46,6 +51,4 @@ pythonpath = ["."]
 # tests/ holds project-level tests (e.g. environment smoke tests); apps/<app>/tests/
 # holds per-app tests once apps/ exists (from HS-004 onward).
 testpaths = ["tests", "apps"]
-# DJANGO_SETTINGS_MODULE is deliberately NOT set here: no Django settings module
-# exists yet. pytest-django is installed (see [dependency-groups] above) but its
-# configuration is deferred to HS-003, which creates config/settings.py.
+DJANGO_SETTINGS_MODULE = "config.settings"
