@@ -23,8 +23,13 @@ commit and nobody is tempted to put ingestion code in the search app "for now".
 - [ ] `manage.py` and a `config/` package (settings, urls, wsgi, asgi) exist
 - [ ] `apps/papers`, `apps/ingestion`, `apps/search` exist as installed Django
       apps with explicit `AppConfig` entries
-- [ ] `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, and `DATABASE_URL` are read from
-      the environment via `django-environ`; no secret has a hardcoded value
+- [ ] `SECRET_KEY`, `DEBUG` and `ALLOWED_HOSTS` are read from the environment
+      via `django-environ`; no secret has a hardcoded value
+- [ ] The database connection is assembled from the five `POSTGRES_*` variables
+      that HS-002 established. There is **no** `DATABASE_URL`: adding one would
+      restate credentials Compose already owns in a second spelling, and neither
+      spelling can be derived from the other. Populate `DATABASES` field by field,
+      or build the DSN in settings from those five variables
 - [ ] `.env.example` is updated with every new variable
 - [ ] `djangorestframework` is installed and in `INSTALLED_APPS`
 - [ ] `uv run python manage.py migrate` succeeds against the Compose database

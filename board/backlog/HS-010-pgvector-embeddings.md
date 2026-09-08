@@ -13,6 +13,14 @@ that semantic similarity can be computed inside the database.
 One vector per paper, over `title + "\n" + abstract` (AGENTS.md §6). The
 `VectorField` dimension **must** equal the provider's dimension from HS-009.
 
+**The migration needs a superuser.** `vector` is an untrusted extension
+(`pg_available_extension_versions` reports `trusted = f, superuser = t`), so
+`CreateExtension` only succeeds because HS-002's Compose entrypoint makes
+`POSTGRES_USER` a superuser. This is invisible locally and is the first thing
+that breaks against any database with a least-privilege application role, where
+a DBA must install the extension out of band and this migration must become a
+no-op guarded on it already existing.
+
 Like ingestion, this command must be resumable: embedding 5,000 abstracts on CPU
 takes minutes, and nobody should have to start over after a Ctrl+C.
 

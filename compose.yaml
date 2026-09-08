@@ -1,0 +1,73 @@
+# Local infrastructure for hepsearch: PostgreSQL + pgvector ONLY.
+#
+# Django runs on the HOST via `uv`, not in a container, so the edit-reload loop
+# stays fast (AGENTS.md §2). Nothing here should ever grow an application
+# service.
+#
+#   docker compose up -d      start the database
+#   docker compose down       stop it, KEEPING the data
+#   docker compose down -v    stop it and DESTROY the data (see AGENTS.md §5)
+
+# Pin the Compose project name so container and volume names never depend on
+# whatever the checkout directory happens to be called. Without this, the volume
+# would be named after the parent folder, and renaming the repository would
+# orphan the data.
+name: hepsearch
+
+services:
+  db:
+    # Pinned to an explicit tag that names the pgvector version, the PostgreSQL
+    # major and the base OS. Never `latest`. This image already ships pgvector,
+    # so there is no Dockerfile to build or extension to compile.
+    # PostgreSQL 17 is inside Django 5.2's supported range.
+    image: pgvector/pgvector:0.8.6-pg17-trixie
+    restart: unless-stopped
+
+    # The container default is 64MB, which is exhausted by parallel query and by
+    # the approximate-nearest-neighbour index build in HS-010.
+    shm_size: 256mb
+
+    environment:
+      # Only what the image entrypoint consumes. POSTGRES_HOST and
+      # POSTGRES_PORT are host-side facts and are deliberately absent here.
+      POSTGRES_DB: ${POSTGRES_DB:-hepsearch}
+      POSTGRES_USER: ${POSTGRES_USER:-hepsearch}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hepsearch}
+      # Encoding and collation are fixed at initdb time and can only be changed
+      # by destroying the volume, so they are set explicitly rather than
+      # inherited. C.UTF-8 gives deterministic collation; it does not affect
+      # full-text search, which selects its configuration per query.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C.UTF-8"
+
+    ports:
+      # host:container. The container always listens on 5432; only the published
+      # host port is configurable. 5433 avoids colliding with a PostgreSQL
+      # already installed on the host.
+      - "${POSTGRES_PORT:-5433}:5432"
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      # `$$` escapes Compose interpolation so the container's shell expands
+      # these. Naming both the user and the database prevents a false pass
+      # against the default `postgres` database.
+      #
+      # `-h 127.0.0.1` is load-bearing, not decoration. During initdb the
+      # entrypoint runs a TEMPORARY server to execute init scripts, and that
+      # server listens on the Unix socket ONLY - never on TCP. A socket-based
+      # pg_isready can therefore report "healthy" against a server that is
+      # about to be shut down. Probing over TCP cannot see the temporary
+      # server at all, so it eliminates that false positive by construction
+      # rather than by hoping the probe lands late enough.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # Measured: a cold initdb boot reaches healthy in ~6s on this machine.
+      # 10s gives headroom, and 5 retries at 10s adds a further 50s before the
+      # container would ever be declared unhealthy.
+      start_period: 10s
+
+volumes:
+  pgdata:

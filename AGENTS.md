@@ -177,7 +177,13 @@ default, not a hardcoded constant.
 ```powershell
 # Infrastructure (Postgres + pgvector only; Django runs on the host)
 docker compose up -d
-docker compose down
+docker compose up -d --wait     # blocks until the healthcheck passes
+docker compose down             # stops the container, KEEPS the data
+
+# Destroys the named volume: every table, row and installed extension is gone,
+# and the next start re-runs initdb from scratch. This is the only way to change
+# the encoding or locale, which are fixed when the volume is first created.
+docker compose down -v
 
 # Dependencies
 uv sync                          # install from the lockfile
