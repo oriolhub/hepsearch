@@ -44,7 +44,7 @@ and no model.
 
 - [ ] Acceptance criteria met
 - [ ] The three-query comparison is recorded in the commit body
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-012: Fuse keyword and semantic results into hybrid ranking`
 
 ## Out of scope

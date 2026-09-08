@@ -1,0 +1,51 @@
+[project]
+name = "hepsearch"
+version = "0.1.0"
+description = "Semantic search over HEP literature (INSPIRE-HEP) with Django + DRF + pgvector."
+requires-python = ">=3.13"
+dependencies = []
+
+# This is a Django application, not a distributable library: the source lives
+# in apps/ and config/, not in an importable top-level "hepsearch" package.
+# package = false tells uv not to try to build/install a distribution for it.
+# No [build-system] table is declared for the same reason (see design.md D1).
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-django",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# ruff format reformats fenced Python code blocks inside Markdown files. Restrict
+# both linting and formatting to this project's own source so vendored/third-party
+# documentation under .agents/ and .github/ (skills, agent prompts) is never
+# rewritten as a side effect of running our tooling.
+include = ["*.py", "*.pyi", "tests/**/*.py", "apps/**/*.py", "config/**/*.py"]
+
+[tool.ruff.lint]
+# E4/E7/E9/F: ruff defaults (pycodestyle errors + pyflakes).
+# I: import sorting (replaces isort).
+# UP: pyupgrade, modern 3.13 syntax.
+# B: bugbear, catches mutable-default-argument and similar footguns.
+# DJ: flake8-django, catches Django modelling mistakes (e.g. null=True on
+#     CharField) - load-bearing given how nullable the INSPIRE data is
+#     (AGENTS.md §4.2).
+# RUF: ruff-specific checks.
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "DJ", "RUF"]
+
+[tool.pytest.ini_options]
+# Nothing is installed as a package (see [tool.uv] above), so the repository
+# root must be added to sys.path explicitly for `apps.*` imports to resolve.
+pythonpath = ["."]
+# tests/ holds project-level tests (e.g. environment smoke tests); apps/<app>/tests/
+# holds per-app tests once apps/ exists (from HS-004 onward).
+testpaths = ["tests", "apps"]
+# DJANGO_SETTINGS_MODULE is deliberately NOT set here: no Django settings module
+# exists yet. pytest-django is installed (see [dependency-groups] above) but its
+# configuration is deferred to HS-003, which creates config/settings.py.

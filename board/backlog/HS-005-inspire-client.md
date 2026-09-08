@@ -43,7 +43,7 @@ the database. That separation is what makes it testable without Postgres.
 ## Definition of done
 
 - [ ] Acceptance criteria met
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-005: Build a tested INSPIRE API client`
 
 ## Out of scope

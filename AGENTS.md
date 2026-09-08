@@ -204,6 +204,7 @@ uv run pytest -x -q --lf                        # stop at first failure, rerun l
 uv run ruff check .
 uv run ruff check . --fix
 uv run ruff format .
+uv run ruff format --check .                    # CI/DoD gate: fails if formatting is needed
 ```
 
 ---
@@ -245,6 +246,12 @@ Search results always carry an INSPIRE link built from `inspire_id`
 
 `ruff` decides formatting; do not argue with it. Keep functions small and I/O at
 the edges — the ranking logic should be testable without a database or a network.
+Every card's Definition of Done requires both `uv run ruff check .` and
+`uv run ruff format --check .` to pass, not just the linter — formatting drift is
+a gate, not a suggestion. Ruff's `[tool.ruff] include` is scoped to this
+project's Python source (`*.py`, `tests/**`, `apps/**`, `config/**`); it
+deliberately does not touch vendored Markdown under `.agents/` or `.github/`,
+since `ruff format` also reformats fenced code blocks inside `.md` files.
 
 ---
 

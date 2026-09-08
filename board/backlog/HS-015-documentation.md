@@ -41,7 +41,7 @@ the README must not duplicate AGENTS.md, it should link to it.
 
 - [ ] Acceptance criteria met
 - [ ] The quickstart has been executed verbatim on a clean clone
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-015: Document the project for a stranger`
 - [ ] v1 definition of done is satisfied
 

@@ -23,6 +23,7 @@ from the codebase. Link to the relevant AGENTS.md section rather than repeating 
 - [ ] Acceptance criteria met
 - [ ] Tests written and passing (`uv run pytest`)
 - [ ] `uv run ruff check .` clean
+- [ ] `uv run ruff format --check .` clean
 - [ ] AGENTS.md updated if a decision changed
 - [ ] Committed as `HS-NNN: <title>` with the card moved to `board/done/`
 

@@ -37,7 +37,7 @@ service.
 
 - [ ] Acceptance criteria met
 - [ ] Verified with `DEBUG=False` that errors stay opaque
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-013: Harden the API with pagination, throttling and clear errors`
 
 ## Out of scope

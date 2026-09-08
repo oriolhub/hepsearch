@@ -36,7 +36,7 @@ is actually good.
 
 - [ ] Acceptance criteria met
 - [ ] The page has been used by hand against the real corpus
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-008: Add a minimal search page`
 
 ## Out of scope

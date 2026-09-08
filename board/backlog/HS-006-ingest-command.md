@@ -43,7 +43,7 @@ means fetching roughly 5,600.
 - [ ] Acceptance criteria met
 - [ ] A real ingestion run has been performed and the resulting count recorded in
       the commit body
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-006: Ingest a real corpus with a management command`
 
 ## Out of scope

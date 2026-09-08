@@ -21,6 +21,11 @@ it arrive in HS-010.
 
 ## Acceptance criteria
 
+- [ ] **This card creates `.env.example`** — it is the first card that introduces
+      an environment variable, so ownership moved here from HS-001, where the AC
+      was unverifiable
+- [ ] `.env.example` is committed with placeholder values and never real secrets;
+      `.env` itself stays git-ignored and uncommitted
 - [ ] `compose.yaml` defines a single `db` service using a Postgres image with
       pgvector preinstalled, pinned to an explicit tag (never `latest`)
 - [ ] Credentials, database name, and host port come from environment variables
@@ -36,6 +41,7 @@ it arrive in HS-010.
 ## Definition of done
 
 - [ ] Acceptance criteria met
+- [ ] `uv run ruff check .` and `uv run ruff format --check .` both pass
 - [ ] The verification commands are recorded in the commit body
 - [ ] Committed as `HS-002: Run PostgreSQL with pgvector via Docker Compose`
 

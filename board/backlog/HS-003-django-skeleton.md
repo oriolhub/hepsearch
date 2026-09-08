@@ -38,7 +38,7 @@ commit and nobody is tempted to put ingestion code in the search app "for now".
 ## Definition of done
 
 - [ ] Acceptance criteria met
-- [ ] `uv run pytest` and `uv run ruff check .` pass
+- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-003: Create the Django project skeleton`
 
 ## Out of scope

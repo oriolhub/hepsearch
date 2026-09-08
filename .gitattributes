@@ -1,0 +1,10 @@
+# Normalize line endings on checkout regardless of the host platform's git
+# config, so a Windows checkout and a Linux/macOS checkout never disagree
+# about a file's content and produce a spurious whole-file diff.
+* text=auto
+
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
