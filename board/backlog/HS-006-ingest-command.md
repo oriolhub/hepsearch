@@ -17,8 +17,11 @@ synchronous management command and no Celery (AGENTS.md §2).
 **Idempotence is the critical property.** This command gets re-run constantly
 during development and must be safe to interrupt and resume.
 
-Because ~10% of INSPIRE records have no abstract, landing 5,000 usable papers
-means fetching roughly 5,600.
+The HS-005 client treats `--limit` as the number of usable records yielded, so
+it absorbs the variable number of abstract-less records fetched along the way.
+Landing 5,000 usable papers therefore requests `--limit 5000` directly; the
+exact number of API records fetched remains an implementation detail reported by
+this command.
 
 ## Acceptance criteria
 

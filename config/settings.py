@@ -14,6 +14,11 @@ else:
     SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+INSPIRE_THROTTLE_SECONDS = env.float("INSPIRE_THROTTLE_SECONDS", default=1.0)
+INSPIRE_TIMEOUT_SECONDS = env.float("INSPIRE_TIMEOUT_SECONDS", default=30.0)
+INSPIRE_PAGE_SIZE = env.int("INSPIRE_PAGE_SIZE", default=250)
+INSPIRE_MAX_RETRIES = env.int("INSPIRE_MAX_RETRIES", default=3)
+INSPIRE_BACKOFF_BASE = env.float("INSPIRE_BACKOFF_BASE", default=1.0)
 
 INSTALLED_APPS = [
     "django.contrib.admin",

@@ -48,6 +48,7 @@ Do not build these. Do not propose these. They are out of scope for v1:
 | Lint/format | `ruff` | Replaces black + isort + flake8 |
 | Tests | `pytest` + `pytest-django` | |
 | Settings | `django-environ` + `.env` | Typed env parsing |
+| HTTP client | `httpx` | INSPIRE fetching with mandatory timeouts, connection reuse and a small explicit retry loop |
 | Embeddings | Pluggable interface, local `sentence-transformers` as default | No API key, no per-query cost, works offline |
 | Frontend | DRF JSON API + minimal Django templates | The API is the product; the page proves it |
 | Background work | Synchronous management commands | Ingestion is a batch job an operator runs, not a request-path concern. No Celery, no Redis, no broker |
@@ -123,7 +124,10 @@ Verified against the live API:
 
 - `size` **caps at 1000**; `size=1001` returns `400 BAD REQUEST`
 - Deep pagination works (`page=400` at `size=25` returns `200`)
-- `fields=` trims the response — always use it; full records are enormous
+- `fields=` trims the response — always use it; full records are enormous. Dotted
+  sub-fields work, so request `authors.full_name`, not full author objects.
+- The result window is **10,000 records**: a request whose offset is 10,000 or
+  greater returns `400 BAD REQUEST`
 - No rate-limit headers are returned, which is not permission to hammer it.
   Ingestion must throttle politely and set a descriptive `User-Agent`
 
@@ -139,7 +143,7 @@ This is the single most important ingestion fact. Observed on live records:
 | `titles[0].title` | Always present | |
 | `abstracts[].value` | **~90% of records** | Multiple abstracts with different `source` values are common |
 | `authors[].full_name` | Usually | Can be 50+ entries; collaboration papers can be thousands |
-| `arxiv_eprints[0]` | Usually | Has `value` and `categories[]` |
+| `arxiv_eprints[0]` | **Absent on ~29% of most-cited records** | When present, has `value` and `categories[]` |
 | `dois` | **Often absent entirely** | Preprints have no DOI. Indexing it as null-array crashes naive code |
 | `publication_info` | **Often absent entirely** | Unpublished preprints |
 | `earliest_date`, `citation_count`, `document_type`, `texkeys`, `inspire_categories` | Usually | |

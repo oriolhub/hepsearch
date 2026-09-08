@@ -1,0 +1,3360 @@
+{
+  "hits": {
+    "total": 29129,
+    "hits": [
+      {
+        "created": "1981-01-01T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 9025,
+          "authors": [
+            {
+              "full_name": "Higgs, Peter W."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "13",
+              "page_end": "509",
+              "year": 1964,
+              "journal_record": {
+                "$ref": "https://inspirehep.net/api/journals/1214495"
+              },
+              "page_start": "508",
+              "journal_title": "Phys.Rev.Lett."
+            },
+            {
+              "pubinfo_freetext": "Also in *Lichtenberg, D. B. (Ed.), Rosen, S. P. (Ed.): Developments In The Quark Theory Of Hadrons, Vol. 1*, 155-156"
+            },
+            {
+              "page_end": "161",
+              "page_start": "160",
+              "parent_record": {
+                "$ref": "https://inspirehep.net/api/literature/571265"
+              }
+            }
+          ],
+          "control_number": 11883,
+          "dois": [
+            {
+              "value": "10.1103/PhysRevLett.13.508"
+            }
+          ],
+          "titles": [
+            {
+              "title": "Broken Symmetries and the Masses of Gauge Bosons"
+            },
+            {
+              "source": "arXiv",
+              "title": "BROKEN SYMMETRIES AND THE MASSES OF GAUGE BOSONS."
+            }
+          ],
+          "earliest_date": "1964-10"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/11883?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/11883?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/11883?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/11883?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/11883?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/11883?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A11883"
+        },
+        "id": "11883",
+        "updated": "2023-03-10T10:39:01.234507+00:00"
+      },
+      {
+        "created": "2012-10-31T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 1420,
+          "abstracts": [
+            {
+              "source": "CDS",
+              "value": "In this note, we report the results of the technical combination exercises conducted\nby the group during Winter-Spring 2011 and summarize the decisions taken\nin preparation for the statistical combination of the Standard Model Higgs boson searches\nat the LHC. The procedure to be used for the combination in Summer 2011 is explicitly\ndetailed to avoid potential biases from decisions taken after the data have\nbeen collected.",
+              "abstract_source_suggest": {
+                "input": "CDS"
+              }
+            }
+          ],
+          "control_number": 1196797,
+          "titles": [
+            {
+              "source": "CDS",
+              "title": "Procedure for the LHC Higgs boson search combination in Summer 2011"
+            }
+          ],
+          "earliest_date": "2011-08-18"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/1196797?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/1196797?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/1196797?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/1196797?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/1196797?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/1196797?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A1196797"
+        },
+        "id": "1196797",
+        "updated": "2024-11-18T11:02:24.526885+00:00"
+      },
+      {
+        "created": "2014-11-03T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 4611,
+          "authors": [
+            {
+              "full_name": "Ball, Richard D."
+            },
+            {
+              "full_name": "Bertone, Valerio"
+            },
+            {
+              "full_name": "Carrazza, Stefano"
+            },
+            {
+              "full_name": "Deans, Christopher S."
+            },
+            {
+              "full_name": "Del Debbio, Luigi"
+            },
+            {
+              "full_name": "Forte, Stefano"
+            },
+            {
+              "full_name": "Guffanti, Alberto"
+            },
+            {
+              "full_name": "Hartland, Nathan P."
+            },
+            {
+              "full_name": "Latorre, Jos\u00e9 I."
+            },
+            {
+              "full_name": "Rojo, Juan"
+            },
+            {
+              "full_name": "Ubiali, Maria"
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "04",
+              "artid": "040",
+              "year": 2015,
+              "journal_record": {
+                "$ref": "https://inspirehep.net/api/journals/1213103"
+              },
+              "page_start": "040",
+              "journal_title": "JHEP"
+            }
+          ],
+          "abstracts": [
+            {
+              "source": "Springer",
+              "value": "We present NNPDF3.0, the first set of parton distribution functions (PDFs) determined with a methodology validated by a closure test. NNPDF3.0 uses a global dataset including HERA-II deep-inelastic inclusive cross-sections, the combined HERA charm data, jet production from ATLAS and CMS, vector boson rapidity and transverse momentum distributions from ATLAS, CMS and LHCb, W +c data from CMS and top quark pair production total cross sections from ATLAS and CMS. Results are based on LO, NLO and NNLO QCD theory and also include electroweak corrections. To validate our methodology, we show that PDFs determined from pseudo-data generated from a known underlying law correctly reproduce the statistical distributions expected on the basis of the assumed experimental uncertainties. This closure test ensures that our methodological uncertainties are negligible in comparison to the generic theoretical and experimental uncertainties of PDF determination. This enables us to determine with confidence PDFs at different perturbative orders and using a variety of experimental datasets ranging from HERA-only up to a global set including the latest LHC results, all using precisely the same validated methodology. We explore some of the phenomenological implications of our results for the upcoming 13 TeV Run of the LHC, in particular for Higgs production cross-sections.",
+              "abstract_source_suggest": {
+                "input": "Springer"
+              }
+            },
+            {
+              "source": "arXiv",
+              "value": "We present NNPDF3.0, the first set of parton distribution functions (PDFs) determined with a methodology validated by a closure test. NNPDF3.0 uses a global dataset including HERA-II deep-inelastic inclusive cross-sections, the combined HERA charm data, jet production from ATLAS and CMS, vector boson rapidity and transverse momentum distributions from ATLAS, CMS and LHCb, W+c data from CMS and top quark pair production total cross sections from ATLAS and CMS. Results are based on LO, NLO and NNLO QCD theory and also include electroweak corrections. To validate our methodology, we show that PDFs determined from pseudo-data generated from a known underlying law correctly reproduce the statistical distributions expected on the basis of the assumed experimental uncertainties. This closure test ensures that our methodological uncertainties are negligible in comparison to the generic theoretical and experimental uncertainties of PDF determination. This enables us to determine with confidence PDFs at different perturbative orders and using a variety of experimental datasets ranging from HERA-only up to a global set including the latest LHC results, all using precisely the same validated methodology. We explore some of the phenomenological implications of our results for the upcoming 13 TeV Run of the LHC, in particular for Higgs production cross-sections.",
+              "abstract_source_suggest": {
+                "input": "arXiv"
+              }
+            }
+          ],
+          "control_number": 1325552,
+          "dois": [
+            {
+              "source": "bibmatch",
+              "value": "10.1007/JHEP04(2015)040"
+            }
+          ],
+          "arxiv_eprints": [
+            {
+              "categories": [
+                "hep-ph",
+                "hep-ex"
+              ],
+              "value": "1410.8849"
+            }
+          ],
+          "titles": [
+            {
+              "source": "arXiv",
+              "title": "Parton distributions for the LHC Run II"
+            }
+          ],
+          "earliest_date": "2014-10-31"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/1325552?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/1325552?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/1325552?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/1325552?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/1325552?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/1325552?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A1325552"
+        },
+        "id": "1325552",
+        "updated": "2023-03-07T06:50:50.626309+00:00"
+      },
+      {
+        "created": "2018-08-21T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 9582,
+          "authors": [
+            {
+              "full_name": "Tanabashi, M."
+            },
+            {
+              "full_name": "Hagiwara, K."
+            },
+            {
+              "full_name": "Hikasa, K."
+            },
+            {
+              "full_name": "Nakamura, K."
+            },
+            {
+              "full_name": "Sumino, Y."
+            },
+            {
+              "full_name": "Takahashi, F."
+            },
+            {
+              "full_name": "Tanaka, J."
+            },
+            {
+              "full_name": "Agashe, K."
+            },
+            {
+              "full_name": "Aielli, G."
+            },
+            {
+              "full_name": "Amsler, C."
+            },
+            {
+              "full_name": "Antonelli, M."
+            },
+            {
+              "full_name": "Asner, D.M."
+            },
+            {
+              "full_name": "Baer, H."
+            },
+            {
+              "full_name": "Banerjee, Sw."
+            },
+            {
+              "full_name": "Barnett, R.M."
+            },
+            {
+              "full_name": "Basaglia, T."
+            },
+            {
+              "full_name": "Bauer, C.W."
+            },
+            {
+              "full_name": "Beatty, J.J."
+            },
+            {
+              "full_name": "Belousov, V.I."
+            },
+            {
+              "full_name": "Beringer, J."
+            },
+            {
+              "full_name": "Bethke, S."
+            },
+            {
+              "full_name": "Bettini, A."
+            },
+            {
+              "full_name": "Bichsel, H."
+            },
+            {
+              "full_name": "Biebel, O."
+            },
+            {
+              "full_name": "Black, K.M."
+            },
+            {
+              "full_name": "Blucher, E."
+            },
+            {
+              "full_name": "Buchmuller, O."
+            },
+            {
+              "full_name": "Burkert, V."
+            },
+            {
+              "full_name": "Bychkov, M.A."
+            },
+            {
+              "full_name": "Cahn, R.N."
+            },
+            {
+              "full_name": "Carena, M."
+            },
+            {
+              "full_name": "Ceccucci, A."
+            },
+            {
+              "full_name": "Cerri, A."
+            },
+            {
+              "full_name": "Chakraborty, D."
+            },
+            {
+              "full_name": "Chen, M.C."
+            },
+            {
+              "full_name": "Chivukula, R.S."
+            },
+            {
+              "full_name": "Cowan, G."
+            },
+            {
+              "full_name": "Dahl, O."
+            },
+            {
+              "full_name": "D'Ambrosio, G."
+            },
+            {
+              "full_name": "Damour, T."
+            },
+            {
+              "full_name": "de Florian, D."
+            },
+            {
+              "full_name": "de Gouv\u00eaa, A."
+            },
+            {
+              "full_name": "DeGrand, T."
+            },
+            {
+              "full_name": "de Jong, P."
+            },
+            {
+              "full_name": "Dissertori, G."
+            },
+            {
+              "full_name": "Dobrescu, B.A."
+            },
+            {
+              "full_name": "D'Onofrio, M."
+            },
+            {
+              "full_name": "Doser, M."
+            },
+            {
+              "full_name": "Drees, M."
+            },
+            {
+              "full_name": "Dreiner, H.K."
+            },
+            {
+              "full_name": "Dwyer, D.A."
+            },
+            {
+              "full_name": "Eerola, P."
+            },
+            {
+              "full_name": "Eidelman, S."
+            },
+            {
+              "full_name": "Ellis, J."
+            },
+            {
+              "full_name": "Erler, J."
+            },
+            {
+              "full_name": "Ezhela, V.V."
+            },
+            {
+              "full_name": "Fetscher, W."
+            },
+            {
+              "full_name": "Fields, B.D."
+            },
+            {
+              "full_name": "Firestone, R."
+            },
+            {
+              "full_name": "Foster, B."
+            },
+            {
+              "full_name": "Freitas, A."
+            },
+            {
+              "full_name": "Gallagher, H."
+            },
+            {
+              "full_name": "Garren, L."
+            },
+            {
+              "full_name": "Gerber, H.J."
+            },
+            {
+              "full_name": "Gerbier, G."
+            },
+            {
+              "full_name": "Gershon, T."
+            },
+            {
+              "full_name": "Gershtein, Y."
+            },
+            {
+              "full_name": "Gherghetta, T."
+            },
+            {
+              "full_name": "Godizov, A.A."
+            },
+            {
+              "full_name": "Goodman, M."
+            },
+            {
+              "full_name": "Grab, C."
+            },
+            {
+              "full_name": "Gritsan, A.V."
+            },
+            {
+              "full_name": "Grojean, C."
+            },
+            {
+              "full_name": "Groom, D.E."
+            },
+            {
+              "full_name": "Gr\u00fcnewald, M."
+            },
+            {
+              "full_name": "Gurtu, A."
+            },
+            {
+              "full_name": "Gutsche, T."
+            },
+            {
+              "full_name": "Haber, H.E."
+            },
+            {
+              "full_name": "Hanhart, C."
+            },
+            {
+              "full_name": "Hashimoto, S."
+            },
+            {
+              "full_name": "Hayato, Y."
+            },
+            {
+              "full_name": "Hayes, K.G."
+            },
+            {
+              "full_name": "Hebecker, A."
+            },
+            {
+              "full_name": "Heinemeyer, S."
+            },
+            {
+              "full_name": "Heltsley, B."
+            },
+            {
+              "full_name": "Hern\u00e1ndez-Rey, J.J."
+            },
+            {
+              "full_name": "Hisano, J."
+            },
+            {
+              "full_name": "H\u00f6cker, A."
+            },
+            {
+              "full_name": "Holder, J."
+            },
+            {
+              "full_name": "Holtkamp, A."
+            },
+            {
+              "full_name": "Hyodo, T."
+            },
+            {
+              "full_name": "Irwin, K.D."
+            },
+            {
+              "full_name": "Johnson, K.F."
+            },
+            {
+              "full_name": "Kado, M."
+            },
+            {
+              "full_name": "Karliner, M."
+            },
+            {
+              "full_name": "Katz, U.F."
+            },
+            {
+              "full_name": "Klein, S.R."
+            },
+            {
+              "full_name": "Klempt, E."
+            },
+            {
+              "full_name": "Kowalewski, R.V."
+            },
+            {
+              "full_name": "Krauss, F."
+            },
+            {
+              "full_name": "Kreps, M."
+            },
+            {
+              "full_name": "Krusche, B."
+            },
+            {
+              "full_name": "Kuyanov, Yu.V."
+            },
+            {
+              "full_name": "Kwon, Y."
+            },
+            {
+              "full_name": "Lahav, O."
+            },
+            {
+              "full_name": "Laiho, J."
+            },
+            {
+              "full_name": "Lesgourgues, J."
+            },
+            {
+              "full_name": "Liddle, A."
+            },
+            {
+              "full_name": "Ligeti, Z."
+            },
+            {
+              "full_name": "Lin, C.J."
+            },
+            {
+              "full_name": "Lippmann, C."
+            },
+            {
+              "full_name": "Liss, T.M."
+            },
+            {
+              "full_name": "Littenberg, L."
+            },
+            {
+              "full_name": "Lugovsky, K.S."
+            },
+            {
+              "full_name": "Lugovsky, S.B."
+            },
+            {
+              "full_name": "Lusiani, A."
+            },
+            {
+              "full_name": "Makida, Y."
+            },
+            {
+              "full_name": "Maltoni, F."
+            },
+            {
+              "full_name": "Mannel, T."
+            },
+            {
+              "full_name": "Manohar, A.V."
+            },
+            {
+              "full_name": "Marciano, W.J."
+            },
+            {
+              "full_name": "Martin, A.D."
+            },
+            {
+              "full_name": "Masoni, A."
+            },
+            {
+              "full_name": "Matthews, J."
+            },
+            {
+              "full_name": "Mei\u00dfner, U.G."
+            },
+            {
+              "full_name": "Milstead, D."
+            },
+            {
+              "full_name": "Mitchell, R.E."
+            },
+            {
+              "full_name": "M\u00f6nig, K."
+            },
+            {
+              "full_name": "Molaro, P."
+            },
+            {
+              "full_name": "Moortgat, F."
+            },
+            {
+              "full_name": "Moskovic, M."
+            },
+            {
+              "full_name": "Murayama, H."
+            },
+            {
+              "full_name": "Narain, M."
+            },
+            {
+              "full_name": "Nason, P."
+            },
+            {
+              "full_name": "Navas, S."
+            },
+            {
+              "full_name": "Neubert, M."
+            },
+            {
+              "full_name": "Nevski, P."
+            },
+            {
+              "full_name": "Nir, Y."
+            },
+            {
+              "full_name": "Olive, K.A."
+            },
+            {
+              "full_name": "Pagan Griso, S."
+            },
+            {
+              "full_name": "Parsons, J."
+            },
+            {
+              "full_name": "Patrignani, C."
+            },
+            {
+              "full_name": "Peacock, J.A."
+            },
+            {
+              "full_name": "Pennington, M."
+            },
+            {
+              "full_name": "Petcov, S.T."
+            },
+            {
+              "full_name": "Petrov, V.A."
+            },
+            {
+              "full_name": "Pianori, E."
+            },
+            {
+              "full_name": "Piepke, A."
+            },
+            {
+              "full_name": "Pomarol, A."
+            },
+            {
+              "full_name": "Quadt, A."
+            },
+            {
+              "full_name": "Rademacker, J."
+            },
+            {
+              "full_name": "Raffelt, G."
+            },
+            {
+              "full_name": "Ratcliff, B.N."
+            },
+            {
+              "full_name": "Richardson, P."
+            },
+            {
+              "full_name": "Ringwald, A."
+            },
+            {
+              "full_name": "Roesler, S."
+            },
+            {
+              "full_name": "Rolli, S."
+            },
+            {
+              "full_name": "Romaniouk, A."
+            },
+            {
+              "full_name": "Rosenberg, L.J."
+            },
+            {
+              "full_name": "Rosner, J.L."
+            },
+            {
+              "full_name": "Rybka, G."
+            },
+            {
+              "full_name": "Ryutin, R.A."
+            },
+            {
+              "full_name": "Sachrajda, C.T."
+            },
+            {
+              "full_name": "Sakai, Y."
+            },
+            {
+              "full_name": "Salam, G.P."
+            },
+            {
+              "full_name": "Sarkar, S."
+            },
+            {
+              "full_name": "Sauli, F."
+            },
+            {
+              "full_name": "Schneider, O."
+            },
+            {
+              "full_name": "Scholberg, K."
+            },
+            {
+              "full_name": "Schwartz, A.J."
+            },
+            {
+              "full_name": "Scott, D."
+            },
+            {
+              "full_name": "Sharma, V."
+            },
+            {
+              "full_name": "Sharpe, S.R."
+            },
+            {
+              "full_name": "Shutt, T."
+            },
+            {
+              "full_name": "Silari, M."
+            },
+            {
+              "full_name": "Sj\u00f6strand, T."
+            },
+            {
+              "full_name": "Skands, P."
+            },
+            {
+              "full_name": "Skwarnicki, T."
+            },
+            {
+              "full_name": "Smith, J.G."
+            },
+            {
+              "full_name": "Smoot, G.F."
+            },
+            {
+              "full_name": "Spanier, S."
+            },
+            {
+              "full_name": "Spieler, H."
+            },
+            {
+              "full_name": "Spiering, C."
+            },
+            {
+              "full_name": "Stahl, A."
+            },
+            {
+              "full_name": "Stone, S.L."
+            },
+            {
+              "full_name": "Sumiyoshi, T."
+            },
+            {
+              "full_name": "Syphers, M.J."
+            },
+            {
+              "full_name": "Terashi, K."
+            },
+            {
+              "full_name": "Terning, J."
+            },
+            {
+              "full_name": "Thoma, U."
+            },
+            {
+              "full_name": "Thorne, R.S."
+            },
+            {
+              "full_name": "Tiator, L."
+            },
+            {
+              "full_name": "Titov, M."
+            },
+            {
+              "full_name": "Tkachenko, N.P."
+            },
+            {
+              "full_name": "T\u00f6rnqvist, N.A."
+            },
+            {
+              "full_name": "Tovey, D.R."
+            },
+            {
+              "full_name": "Valencia, G."
+            },
+            {
+              "full_name": "Van de Water, R."
+            },
+            {
+              "full_name": "Varelas, N."
+            },
+            {
+              "full_name": "Venanzoni, G."
+            },
+            {
+              "full_name": "Verde, L."
+            },
+            {
+              "full_name": "Vincter, M.G."
+            },
+            {
+              "full_name": "Vogel, P."
+            },
+            {
+              "full_name": "Vogt, A."
+            },
+            {
+              "full_name": "Wakely, S.P."
+            },
+            {
+              "full_name": "Walkowiak, W."
+            },
+            {
+              "full_name": "Walter, C.W."
+            },
+            {
+              "full_name": "Wands, D."
+            },
+            {
+              "full_name": "Ward, D.R."
+            },
+            {
+              "full_name": "Wascko, M.O."
+            },
+            {
+              "full_name": "Weiglein, G."
+            },
+            {
+              "full_name": "Weinberg, D.H."
+            },
+            {
+              "full_name": "Weinberg, E.J."
+            },
+            {
+              "full_name": "White, M."
+            },
+            {
+              "full_name": "Wiencke, L.R."
+            },
+            {
+              "full_name": "Willocq, S."
+            },
+            {
+              "full_name": "Wohl, C.G."
+            },
+            {
+              "full_name": "Womersley, J."
+            },
+            {
+              "full_name": "Woody, C.L."
+            },
+            {
+              "full_name": "Workman, R.L."
+            },
+            {
+              "full_name": "Yao, W.M."
+            },
+            {
+              "full_name": "Zeller, G.P."
+            },
+            {
+              "full_name": "Zenin, O.V."
+            },
+            {
+              "full_name": "Zhu, R.Y."
+            },
+            {
+              "full_name": "Zhu, S.L."
+            },
+            {
+              "full_name": "Zimmermann, F."
+            },
+            {
+              "full_name": "Zyla, P.A."
+            },
+            {
+              "full_name": "Anderson, J."
+            },
+            {
+              "full_name": "Fuller, L."
+            },
+            {
+              "full_name": "Lugovsky, V.S."
+            },
+            {
+              "full_name": "Schaffner, P."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "98",
+              "artid": "030001",
+              "year": 2018,
+              "journal_issue": "3",
+              "journal_title": "Phys.Rev.D"
+            }
+          ],
+          "abstracts": [
+            {
+              "source": "APS",
+              "value": "The Review summarizes much of particle physics and cosmology. Using data from previous editions, plus 2,873 new measurements from 758 papers, we list, evaluate, and average measured properties of gauge bosons and the recently discovered Higgs boson, leptons, quarks, mesons, and baryons. We summarize searches for hypothetical particles such as supersymmetric particles, heavy bosons, axions, dark photons, etc. Particle properties and search limits are listed in Summary Tables. We give numerous tables, figures, formulae, and reviews of topics such as Higgs Boson Physics, Supersymmetry, Grand Unified Theories, Neutrino Mixing, Dark Energy, Dark Matter, Cosmology, Particle Detectors, Colliders, Probability and Statistics. Among the 118 reviews are many that are new or heavily revised, including a new review on Neutrinos in Cosmology. Starting with this edition, the Review is divided into two volumes. Volume 1 includes the Summary Tables and all review articles. Volume 2 consists of the Particle Listings. Review articles that were previously part of the Listings are now included in volume 1. The complete Review (both volumes) is published online on the website of the Particle Data Group (http://pdg.lbl.gov) and in a journal. Volume 1 is available in print as the PDG Book. A Particle Physics Booklet with the Summary Tables and essential tables, figures, and equations from selected review articles is also available. The 2018 edition of the Review of Particle Physics should be cited as: M. Tanabashi (Particle Data Group), Phys. Rev. D 98, 030001 (2018).",
+              "abstract_source_suggest": {
+                "input": "APS"
+              }
+            }
+          ],
+          "control_number": 1688995,
+          "dois": [
+            {
+              "source": "APS",
+              "value": "10.1103/PhysRevD.98.030001"
+            }
+          ],
+          "titles": [
+            {
+              "source": "APS",
+              "title": "Review of Particle Physics"
+            },
+            {
+              "title": "Particle Physics Properties PDG RPP"
+            }
+          ],
+          "earliest_date": "2018-08-17"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/1688995?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/1688995?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/1688995?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/1688995?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/1688995?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/1688995?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A1688995"
+        },
+        "id": "1688995",
+        "updated": "2026-09-03T20:46:18.526050+00:00"
+      },
+      {
+        "created": "2006-03-22T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 13727,
+          "authors": [
+            {
+              "full_name": "Sjostrand, Torbjorn"
+            },
+            {
+              "full_name": "Mrenna, Stephen"
+            },
+            {
+              "full_name": "Skands, Peter Z."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "05",
+              "artid": "026",
+              "year": 2006,
+              "journal_record": {
+                "$ref": "https://inspirehep.net/api/journals/1213103"
+              },
+              "page_start": "026",
+              "journal_title": "JHEP"
+            }
+          ],
+          "abstracts": [
+            {
+              "value": "The PYTHIA program can be used to generate high-energy-physics `events', i.e. sets of outgoing particles produced in the interactions between two incoming particles. The objective is to provide as accurate as possible a representation of event properties in a wide range of reactions, within and beyond the Standard Model, with emphasis on those where strong interactions play a role, directly or indirectly, and therefore multihadronic final states are produced. The physics is then not understood well enough to give an exact description: instead the program has to be based on a combination of analytical results and various QCD-based models. This physics input is summarized here, for areas such as hard subprocesses, initial- and final-state parton showers, underlying events and beam remnants, fragmentation and decays, and much more. Furthermore, extensive information is provided on all program elements: subroutines and functions, switches and parameters, and particle and process data. This should allow the user to tailor the generation task to the topics of interest."
+            }
+          ],
+          "control_number": 712925,
+          "dois": [
+            {
+              "value": "10.1088/1126-6708/2006/05/026"
+            }
+          ],
+          "arxiv_eprints": [
+            {
+              "categories": [
+                "hep-ph"
+              ],
+              "value": "hep-ph/0603175"
+            }
+          ],
+          "titles": [
+            {
+              "title": "PYTHIA 6.4 Physics and Manual"
+            },
+            {
+              "source": "arXiv",
+              "title": "PYTHIA 6.4 Physics and Manual"
+            }
+          ],
+          "earliest_date": "2006-03"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/712925?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/712925?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/712925?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/712925?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/712925?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/712925?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A712925"
+        },
+        "id": "712925",
+        "updated": "2026-06-15T14:10:26.320947+00:00"
+      },
+      {
+        "created": "1974-01-01T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 6027,
+          "authors": [
+            {
+              "full_name": "Pati, Jogesh C."
+            },
+            {
+              "full_name": "Salam, Abdus"
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "10",
+              "page_end": "289",
+              "year": 1974,
+              "page_start": "275",
+              "journal_title": "Phys.Rev.D"
+            },
+            {
+              "journal_volume": "11",
+              "material": "erratum",
+              "page_end": "703",
+              "year": 1975,
+              "page_start": "703",
+              "journal_title": "Phys.Rev.D"
+            }
+          ],
+          "abstracts": [
+            {
+              "source": "APS",
+              "value": "Universal strong, weak, and electromagnetic interactions of leptons and hadrons are generated by gauging a non-Abelian renormalizable anomaly-free subgroup of the fundamental symmetry structure SU(4)L\u00d7SU(4)R\u00d7SU(4\u2032), which unites three quartets of \"colored\" baryonic quarks and the quartet of known leptons into 16-folds of chiral fermionic multiplets, with lepton number treated as the fourth \"color\" quantum number. Experimental consequences of this scheme are discussed. These include (1) the emergence and effects of exotic gauge mesons carrying both baryonic as well as leptonic quantum numbers, particularly in semileptonic processes, (2) the manifestation of anomalous strong interactions among leptonic and semileptonic processes at high energies, (3) the independent possibility of baryon-lepton number violation in quark and proton decays, and (4) the occurrence of (V+A) weak-current effects.",
+              "abstract_source_suggest": {
+                "input": "APS"
+              }
+            }
+          ],
+          "control_number": 89207,
+          "dois": [
+            {
+              "value": "10.1103/PhysRevD.10.275"
+            },
+            {
+              "value": "10.1103/PhysRevD.11.703.2"
+            }
+          ],
+          "titles": [
+            {
+              "title": "Lepton Number as the Fourth Color"
+            },
+            {
+              "title": "COLOUR"
+            },
+            {
+              "title": "COLOR"
+            }
+          ],
+          "earliest_date": "1974-01"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/89207?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/89207?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/89207?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/89207?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/89207?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/89207?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A89207"
+        },
+        "id": "89207",
+        "updated": "2023-03-10T10:39:46.240902+00:00"
+      },
+      {
+        "created": "2014-09-09T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 9475,
+          "authors": [
+            {
+              "full_name": "Olive, K.A."
+            },
+            {
+              "full_name": "Agashe, K."
+            },
+            {
+              "full_name": "Amsler, C."
+            },
+            {
+              "full_name": "Antonelli, M."
+            },
+            {
+              "full_name": "Arguin, J.-F."
+            },
+            {
+              "full_name": "Asner, D.M."
+            },
+            {
+              "full_name": "Baer, H."
+            },
+            {
+              "full_name": "Band, H.R."
+            },
+            {
+              "full_name": "Barnett, R.M."
+            },
+            {
+              "full_name": "Basaglia, T."
+            },
+            {
+              "full_name": "Bauer, C.W."
+            },
+            {
+              "full_name": "Beatty, J.J."
+            },
+            {
+              "full_name": "Belousov, V.I."
+            },
+            {
+              "full_name": "Beringer, J."
+            },
+            {
+              "full_name": "Bernardi, G."
+            },
+            {
+              "full_name": "Bethke, S."
+            },
+            {
+              "full_name": "Bichsel, H."
+            },
+            {
+              "full_name": "Biebel, O."
+            },
+            {
+              "full_name": "Blucher, E."
+            },
+            {
+              "full_name": "Blusk, S."
+            },
+            {
+              "full_name": "Brooijmans, G."
+            },
+            {
+              "full_name": "Buchmueller, O."
+            },
+            {
+              "full_name": "Burkert, V."
+            },
+            {
+              "full_name": "Bychkov, M.A."
+            },
+            {
+              "full_name": "Cahn, R.N."
+            },
+            {
+              "full_name": "Carena, M."
+            },
+            {
+              "full_name": "Ceccucci, A."
+            },
+            {
+              "full_name": "Cerri, A."
+            },
+            {
+              "full_name": "Chakraborty, D."
+            },
+            {
+              "full_name": "Chen, M.-C."
+            },
+            {
+              "full_name": "Chivukula, R.S."
+            },
+            {
+              "full_name": "Copic, K."
+            },
+            {
+              "full_name": "Cowan, G."
+            },
+            {
+              "full_name": "Dahl, O."
+            },
+            {
+              "full_name": "D'Ambrosio, G."
+            },
+            {
+              "full_name": "Damour, T."
+            },
+            {
+              "full_name": "de Florian, D."
+            },
+            {
+              "full_name": "de Gouvea, A."
+            },
+            {
+              "full_name": "DeGrand, T."
+            },
+            {
+              "full_name": "de Jong, P."
+            },
+            {
+              "full_name": "Dissertori, G."
+            },
+            {
+              "full_name": "Dobrescu, B.A."
+            },
+            {
+              "full_name": "Doser, M."
+            },
+            {
+              "full_name": "Drees, M."
+            },
+            {
+              "full_name": "Dreiner, H.K."
+            },
+            {
+              "full_name": "Edwards, D.A."
+            },
+            {
+              "full_name": "Eidelman, S."
+            },
+            {
+              "full_name": "Erler, J."
+            },
+            {
+              "full_name": "Ezhela, V.V."
+            },
+            {
+              "full_name": "Fetscher, W."
+            },
+            {
+              "full_name": "Fields, B.D."
+            },
+            {
+              "full_name": "Foster, B."
+            },
+            {
+              "full_name": "Freitas, A."
+            },
+            {
+              "full_name": "Gaisser, T.K."
+            },
+            {
+              "full_name": "Gallagher, H."
+            },
+            {
+              "full_name": "Garren, L."
+            },
+            {
+              "full_name": "Gerber, H.-J."
+            },
+            {
+              "full_name": "Gerbier, G."
+            },
+            {
+              "full_name": "Gershon, T."
+            },
+            {
+              "full_name": "Gherghetta, T."
+            },
+            {
+              "full_name": "Golwala, S."
+            },
+            {
+              "full_name": "Goodman, M."
+            },
+            {
+              "full_name": "Grab, C."
+            },
+            {
+              "full_name": "Gritsan, A.V."
+            },
+            {
+              "full_name": "Grojean, C."
+            },
+            {
+              "full_name": "Groom, D.E."
+            },
+            {
+              "full_name": "Grunewald, M."
+            },
+            {
+              "full_name": "Gurtu, A."
+            },
+            {
+              "full_name": "Gutsche, T."
+            },
+            {
+              "full_name": "Haber, H.E."
+            },
+            {
+              "full_name": "Hagiwara, K."
+            },
+            {
+              "full_name": "Hanhart, C."
+            },
+            {
+              "full_name": "Hashimoto, S."
+            },
+            {
+              "full_name": "Hayato, Y."
+            },
+            {
+              "full_name": "Hayes, K.G."
+            },
+            {
+              "full_name": "Heffner, M."
+            },
+            {
+              "full_name": "Heltsley, B."
+            },
+            {
+              "full_name": "Hernandez-Rey, J.J."
+            },
+            {
+              "full_name": "Hikasa, K."
+            },
+            {
+              "full_name": "Hocker, A."
+            },
+            {
+              "full_name": "Holder, J."
+            },
+            {
+              "full_name": "Holtkamp, A."
+            },
+            {
+              "full_name": "Huston, J."
+            },
+            {
+              "full_name": "Jackson, J.D."
+            },
+            {
+              "full_name": "Johnson, K.F."
+            },
+            {
+              "full_name": "Junk, T."
+            },
+            {
+              "full_name": "Kado, M."
+            },
+            {
+              "full_name": "Karlen, D."
+            },
+            {
+              "full_name": "Katz, U.F."
+            },
+            {
+              "full_name": "Klein, S.R."
+            },
+            {
+              "full_name": "Klempt, E."
+            },
+            {
+              "full_name": "Kowalewski, R.V."
+            },
+            {
+              "full_name": "Krauss, F."
+            },
+            {
+              "full_name": "Kreps, M."
+            },
+            {
+              "full_name": "Krusche, B."
+            },
+            {
+              "full_name": "Kuyanov, Yu.V."
+            },
+            {
+              "full_name": "Kwon, Y."
+            },
+            {
+              "full_name": "Lahav, O."
+            },
+            {
+              "full_name": "Laiho, J."
+            },
+            {
+              "full_name": "Langacker, P."
+            },
+            {
+              "full_name": "Liddle, A."
+            },
+            {
+              "full_name": "Ligeti, Z."
+            },
+            {
+              "full_name": "Lin, C.-J."
+            },
+            {
+              "full_name": "Liss, T.M."
+            },
+            {
+              "full_name": "Littenberg, L."
+            },
+            {
+              "full_name": "Lugovsky, K.S."
+            },
+            {
+              "full_name": "Lugovsky, S.B."
+            },
+            {
+              "full_name": "Maltoni, F."
+            },
+            {
+              "full_name": "Mannel, T."
+            },
+            {
+              "full_name": "Manohar, A.V."
+            },
+            {
+              "full_name": "Marciano, W.J."
+            },
+            {
+              "full_name": "Martin, A.D."
+            },
+            {
+              "full_name": "Masoni, A."
+            },
+            {
+              "full_name": "Matthews, J."
+            },
+            {
+              "full_name": "Milstead, D."
+            },
+            {
+              "full_name": "Molaro, P."
+            },
+            {
+              "full_name": "Munig, K."
+            },
+            {
+              "full_name": "Moortgat, F."
+            },
+            {
+              "full_name": "Mortonson, M.J."
+            },
+            {
+              "full_name": "Murayama, H."
+            },
+            {
+              "full_name": "Nakamura, K."
+            },
+            {
+              "full_name": "Narain, M."
+            },
+            {
+              "full_name": "Nason, P."
+            },
+            {
+              "full_name": "Navas, S."
+            },
+            {
+              "full_name": "Neubert, M."
+            },
+            {
+              "full_name": "Nevski, P."
+            },
+            {
+              "full_name": "Nir, Y."
+            },
+            {
+              "full_name": "Pape, L."
+            },
+            {
+              "full_name": "Parsons, J."
+            },
+            {
+              "full_name": "Patrignani, C."
+            },
+            {
+              "full_name": "Peacock, J.A."
+            },
+            {
+              "full_name": "Pennington, M."
+            },
+            {
+              "full_name": "Petcov, S.T."
+            },
+            {
+              "full_name": "Piepke, A."
+            },
+            {
+              "full_name": "Pomarol, A."
+            },
+            {
+              "full_name": "Quadt, A."
+            },
+            {
+              "full_name": "Raby, S."
+            },
+            {
+              "full_name": "Rademacker, J."
+            },
+            {
+              "full_name": "Raffelt, G."
+            },
+            {
+              "full_name": "Ratcliff, B.N."
+            },
+            {
+              "full_name": "Richardson, P."
+            },
+            {
+              "full_name": "Ringwald, A."
+            },
+            {
+              "full_name": "Roesler, S."
+            },
+            {
+              "full_name": "Rolli, S."
+            },
+            {
+              "full_name": "Romaniouk, A."
+            },
+            {
+              "full_name": "Rosenberg, L.J."
+            },
+            {
+              "full_name": "Rosner, J.L."
+            },
+            {
+              "full_name": "Rybka, G."
+            },
+            {
+              "full_name": "Sachrajda, C.T."
+            },
+            {
+              "full_name": "Sakai, Y."
+            },
+            {
+              "full_name": "Salam, G.P."
+            },
+            {
+              "full_name": "Sarkar, S."
+            },
+            {
+              "full_name": "Sauli, F."
+            },
+            {
+              "full_name": "Schneider, O."
+            },
+            {
+              "full_name": "Scholberg, K."
+            },
+            {
+              "full_name": "Scott, D."
+            },
+            {
+              "full_name": "Sharma, V."
+            },
+            {
+              "full_name": "Sharpe, S.R."
+            },
+            {
+              "full_name": "Silari, M."
+            },
+            {
+              "full_name": "Sjostrand, T."
+            },
+            {
+              "full_name": "Skands, P."
+            },
+            {
+              "full_name": "Smith, J.G."
+            },
+            {
+              "full_name": "Smoot, G.F."
+            },
+            {
+              "full_name": "Spanier, S."
+            },
+            {
+              "full_name": "Spieler, H."
+            },
+            {
+              "full_name": "Spiering, C."
+            },
+            {
+              "full_name": "Stahl, A."
+            },
+            {
+              "full_name": "Stanev, T."
+            },
+            {
+              "full_name": "Stone, S.L."
+            },
+            {
+              "full_name": "Sumiyoshi, T."
+            },
+            {
+              "full_name": "Syphers, M.J."
+            },
+            {
+              "full_name": "Takahashi, Fuminobu"
+            },
+            {
+              "full_name": "Tanabashi, M."
+            },
+            {
+              "full_name": "Terning, J."
+            },
+            {
+              "full_name": "Tiator, L."
+            },
+            {
+              "full_name": "Titov, M."
+            },
+            {
+              "full_name": "Tkachenko, N.P."
+            },
+            {
+              "full_name": "Tornqvist, N.A."
+            },
+            {
+              "full_name": "Tovey, D."
+            },
+            {
+              "full_name": "Valencia, G."
+            },
+            {
+              "full_name": "Venanzoni, G."
+            },
+            {
+              "full_name": "Vincter, M.G."
+            },
+            {
+              "full_name": "Vogel, P."
+            },
+            {
+              "full_name": "Vogt, A."
+            },
+            {
+              "full_name": "Wakely, S.P."
+            },
+            {
+              "full_name": "Walkowiak, W."
+            },
+            {
+              "full_name": "Walter, C.W."
+            },
+            {
+              "full_name": "Ward, D.R."
+            },
+            {
+              "full_name": "Weiglein, G."
+            },
+            {
+              "full_name": "Weinberg, D.H."
+            },
+            {
+              "full_name": "Weinberg, E.J."
+            },
+            {
+              "full_name": "White, M."
+            },
+            {
+              "full_name": "Wiencke, L.R."
+            },
+            {
+              "full_name": "Wohl, C.G."
+            },
+            {
+              "full_name": "Wolfenstein, L."
+            },
+            {
+              "full_name": "Womersley, J."
+            },
+            {
+              "full_name": "Woody, C.L."
+            },
+            {
+              "full_name": "Workman, R.L."
+            },
+            {
+              "full_name": "Yamamoto, A."
+            },
+            {
+              "full_name": "Yao, W.-M."
+            },
+            {
+              "full_name": "Zeller, G.P."
+            },
+            {
+              "full_name": "Zenin, O.V."
+            },
+            {
+              "full_name": "Zhang, J."
+            },
+            {
+              "full_name": "Zhu, R.-Y."
+            },
+            {
+              "full_name": "Zimmermann, F."
+            },
+            {
+              "full_name": "Zyla, P.A."
+            },
+            {
+              "full_name": "Harper, G."
+            },
+            {
+              "full_name": "Lugovsky, V.S."
+            },
+            {
+              "full_name": "Schaffner, P."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "38",
+              "artid": "090001",
+              "year": 2014,
+              "journal_title": "Chin.Phys.C"
+            }
+          ],
+          "abstracts": [
+            {
+              "source": "IOP",
+              "value": "TheReviewsummarizes much of particle physics and cosmology. Using data from previous editions, plus 3,283 new measurements from 899 papers, we list, evaluate, and average measured properties of gauge bosons and the recently discovered Higgs boson, leptons, quarks, mesons, and baryons. We summarize searches for hypothetical particles such as heavy neutrinos, supersymmetric and technicolor particles, axions, dark photons, etc. All the particle properties and search limits are listed in Summary Tables. We also give numerous tables, figures, formulae, and reviews of topics such as Supersymmetry, Extra Dimensions, Particle Detectors, Probability, and Statistics. Among the 112 reviews are many that are new or heavily revised including those on: Dark Energy, Higgs Boson Physics, Electroweak Model, Neutrino Cross Section Measurements, Monte Carlo Neutrino Generators, Top Quark, Dark Matter, Dynamical Electroweak Symmetry Breaking, Accelerator Physics of Colliders, High-Energy Collider Parameters, Big Bang Nucleosynthesis, Astrophysical Constants and Cosmological Parameters.All tables, listings, and reviews (and errata) are also available on the Particle Data Group website:http://pdg.lbl.gov",
+              "abstract_source_suggest": {
+                "input": "IOP"
+              }
+            }
+          ],
+          "control_number": 1315584,
+          "dois": [
+            {
+              "value": "10.1088/1674-1137/38/9/090001"
+            }
+          ],
+          "titles": [
+            {
+              "title": "Review of Particle Physics"
+            },
+            {
+              "title": "Particle Physics Properties PDG RPP"
+            },
+            {
+              "source": "arXiv",
+              "title": "Big-Bang Nucleosynthesis"
+            }
+          ],
+          "earliest_date": "2014"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/1315584?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/1315584?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/1315584?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/1315584?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/1315584?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/1315584?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A1315584"
+        },
+        "id": "1315584",
+        "updated": "2024-12-16T15:44:40.426818+00:00"
+      },
+      {
+        "created": "2016-10-06T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 7294,
+          "authors": [
+            {
+              "full_name": "Patrignani, C."
+            },
+            {
+              "full_name": "Agashe, K."
+            },
+            {
+              "full_name": "Aielli, G."
+            },
+            {
+              "full_name": "Amsler, C."
+            },
+            {
+              "full_name": "Antonelli, M."
+            },
+            {
+              "full_name": "Asner, D.M."
+            },
+            {
+              "full_name": "Baer, H."
+            },
+            {
+              "full_name": "Banerjee, Sw."
+            },
+            {
+              "full_name": "Barnett, R.M."
+            },
+            {
+              "full_name": "Basaglia, T."
+            },
+            {
+              "full_name": "Bauer, C.W."
+            },
+            {
+              "full_name": "Beatty, J.J."
+            },
+            {
+              "full_name": "Belousov, V.I."
+            },
+            {
+              "full_name": "Beringer, J."
+            },
+            {
+              "full_name": "Bethke, S."
+            },
+            {
+              "full_name": "Bichsel, H."
+            },
+            {
+              "full_name": "Biebel, O."
+            },
+            {
+              "full_name": "Blucher, E."
+            },
+            {
+              "full_name": "Brooijmans, G."
+            },
+            {
+              "full_name": "Buchmueller, O."
+            },
+            {
+              "full_name": "Burkert, V."
+            },
+            {
+              "full_name": "Bychkov, M.A."
+            },
+            {
+              "full_name": "Cahn, R.N."
+            },
+            {
+              "full_name": "Carena, M."
+            },
+            {
+              "full_name": "Ceccucci, A."
+            },
+            {
+              "full_name": "Cerri, A."
+            },
+            {
+              "full_name": "Chakraborty, D."
+            },
+            {
+              "full_name": "Chen, M.-C."
+            },
+            {
+              "full_name": "Chivukula, R.S."
+            },
+            {
+              "full_name": "Copic, K."
+            },
+            {
+              "full_name": "Cowan, G."
+            },
+            {
+              "full_name": "Dahl, O."
+            },
+            {
+              "full_name": "D'Ambrosio, G."
+            },
+            {
+              "full_name": "Damour, T."
+            },
+            {
+              "full_name": "de Florian, D."
+            },
+            {
+              "full_name": "de Gouvea, A."
+            },
+            {
+              "full_name": "DeGrand, T."
+            },
+            {
+              "full_name": "de Jong, P."
+            },
+            {
+              "full_name": "Dissertori, G."
+            },
+            {
+              "full_name": "Dobrescu, B.A."
+            },
+            {
+              "full_name": "D'Onofrio, M."
+            },
+            {
+              "full_name": "Doser, M."
+            },
+            {
+              "full_name": "Drees, M."
+            },
+            {
+              "full_name": "Dreiner, H.K."
+            },
+            {
+              "full_name": "Dwyer, D.A."
+            },
+            {
+              "full_name": "Eerola, P."
+            },
+            {
+              "full_name": "Eidelman, S."
+            },
+            {
+              "full_name": "Ellis, J."
+            },
+            {
+              "full_name": "Erler, J."
+            },
+            {
+              "full_name": "Ezhela, V.V."
+            },
+            {
+              "full_name": "Fetscher, W."
+            },
+            {
+              "full_name": "Fields, B.D."
+            },
+            {
+              "full_name": "Foster, B."
+            },
+            {
+              "full_name": "Freitas, A."
+            },
+            {
+              "full_name": "Gallagher, H."
+            },
+            {
+              "full_name": "Garren, L."
+            },
+            {
+              "full_name": "Gerber, H.-J."
+            },
+            {
+              "full_name": "Gerbier, G."
+            },
+            {
+              "full_name": "Gershon, T."
+            },
+            {
+              "full_name": "Gherghetta, T."
+            },
+            {
+              "full_name": "Godizov, A.A."
+            },
+            {
+              "full_name": "Goodman, M."
+            },
+            {
+              "full_name": "Grab, C."
+            },
+            {
+              "full_name": "Gritsan, A.V."
+            },
+            {
+              "full_name": "Grojean, C."
+            },
+            {
+              "full_name": "Groom, D.E."
+            },
+            {
+              "full_name": "Gr\u00fcnewald, M."
+            },
+            {
+              "full_name": "Gurtu, A."
+            },
+            {
+              "full_name": "Gutsche, T."
+            },
+            {
+              "full_name": "Haber, H.E."
+            },
+            {
+              "full_name": "Hagiwara, K."
+            },
+            {
+              "full_name": "Hanhart, C."
+            },
+            {
+              "full_name": "Hashimoto, S."
+            },
+            {
+              "full_name": "Hayato, Y."
+            },
+            {
+              "full_name": "Hayes, K.G."
+            },
+            {
+              "full_name": "Hebecker, A."
+            },
+            {
+              "full_name": "Heltsley, B."
+            },
+            {
+              "full_name": "Hern\u00e1ndez-Rey, J.J."
+            },
+            {
+              "full_name": "Hikasa, K."
+            },
+            {
+              "full_name": "Hisano, J."
+            },
+            {
+              "full_name": "H\u00f6cker, A."
+            },
+            {
+              "full_name": "Holder, J."
+            },
+            {
+              "full_name": "Holtkamp, A."
+            },
+            {
+              "full_name": "Huston, J."
+            },
+            {
+              "full_name": "Hyodo, T."
+            },
+            {
+              "full_name": "Irwin, K."
+            },
+            {
+              "full_name": "Jackson, J.D."
+            },
+            {
+              "full_name": "Johnson, K.F."
+            },
+            {
+              "full_name": "Kado, M."
+            },
+            {
+              "full_name": "Karliner, M."
+            },
+            {
+              "full_name": "Katz, U.F."
+            },
+            {
+              "full_name": "Klein, S.R."
+            },
+            {
+              "full_name": "Klempt, E."
+            },
+            {
+              "full_name": "Kowalewski, R.V."
+            },
+            {
+              "full_name": "Krauss, F."
+            },
+            {
+              "full_name": "Kreps, M."
+            },
+            {
+              "full_name": "Krusche, B."
+            },
+            {
+              "full_name": "Kuyanov, Yu.V."
+            },
+            {
+              "full_name": "Kwon, Y."
+            },
+            {
+              "full_name": "Lahav, O."
+            },
+            {
+              "full_name": "Laiho, J."
+            },
+            {
+              "full_name": "Langacker, P."
+            },
+            {
+              "full_name": "Liddle, A."
+            },
+            {
+              "full_name": "Ligeti, Z."
+            },
+            {
+              "full_name": "Lin, C.-J."
+            },
+            {
+              "full_name": "Lippmann, C."
+            },
+            {
+              "full_name": "Liss, T.M."
+            },
+            {
+              "full_name": "Littenberg, L."
+            },
+            {
+              "full_name": "Lugovsky, K.S."
+            },
+            {
+              "full_name": "Lugovsky, S.B."
+            },
+            {
+              "full_name": "Lusiani, A."
+            },
+            {
+              "full_name": "Makida, Y."
+            },
+            {
+              "full_name": "Maltoni, F."
+            },
+            {
+              "full_name": "Mannel, T."
+            },
+            {
+              "full_name": "Manohar, A.V."
+            },
+            {
+              "full_name": "Marciano, W.J."
+            },
+            {
+              "full_name": "Martin, A.D."
+            },
+            {
+              "full_name": "Masoni, A."
+            },
+            {
+              "full_name": "Matthews, J."
+            },
+            {
+              "full_name": "Mei\u00dfner, U.-G."
+            },
+            {
+              "full_name": "Milstead, D."
+            },
+            {
+              "full_name": "Mitchell, R.E."
+            },
+            {
+              "full_name": "Molaro, P."
+            },
+            {
+              "full_name": "M\u00f6nig, K."
+            },
+            {
+              "full_name": "Moortgat, F."
+            },
+            {
+              "full_name": "Mortonson, M.J."
+            },
+            {
+              "full_name": "Murayama, H."
+            },
+            {
+              "full_name": "Nakamura, K."
+            },
+            {
+              "full_name": "Narain, M."
+            },
+            {
+              "full_name": "Nason, P."
+            },
+            {
+              "full_name": "Navas, S."
+            },
+            {
+              "full_name": "Neubert, M."
+            },
+            {
+              "full_name": "Nevski, P."
+            },
+            {
+              "full_name": "Nir, Y."
+            },
+            {
+              "full_name": "Olive, K.A."
+            },
+            {
+              "full_name": "Pagan Griso, S."
+            },
+            {
+              "full_name": "Parsons, J."
+            },
+            {
+              "full_name": "Peacock, J.A."
+            },
+            {
+              "full_name": "Pennington, M."
+            },
+            {
+              "full_name": "Petcov, S.T."
+            },
+            {
+              "full_name": "Petrov, V.A."
+            },
+            {
+              "full_name": "Piepke, A."
+            },
+            {
+              "full_name": "Pomarol, A."
+            },
+            {
+              "full_name": "Quadt, A."
+            },
+            {
+              "full_name": "Raby, S."
+            },
+            {
+              "full_name": "Rademacker, J."
+            },
+            {
+              "full_name": "Raffelt, G."
+            },
+            {
+              "full_name": "Ratcliff, B.N."
+            },
+            {
+              "full_name": "Richardson, P."
+            },
+            {
+              "full_name": "Ringwald, A."
+            },
+            {
+              "full_name": "Roesler, S."
+            },
+            {
+              "full_name": "Rolli, S."
+            },
+            {
+              "full_name": "Romaniouk, A."
+            },
+            {
+              "full_name": "Rosenberg, L.J."
+            },
+            {
+              "full_name": "Rosner, J.L."
+            },
+            {
+              "full_name": "Rybka, G."
+            },
+            {
+              "full_name": "Ryutin, R.A."
+            },
+            {
+              "full_name": "Sachrajda, C.T."
+            },
+            {
+              "full_name": "Sakai, Y."
+            },
+            {
+              "full_name": "Salam, G.P."
+            },
+            {
+              "full_name": "Sarkar, S."
+            },
+            {
+              "full_name": "Sauli, F."
+            },
+            {
+              "full_name": "Schneider, O."
+            },
+            {
+              "full_name": "Scholberg, K."
+            },
+            {
+              "full_name": "Schwartz, A.J."
+            },
+            {
+              "full_name": "Scott, D."
+            },
+            {
+              "full_name": "Sharma, V."
+            },
+            {
+              "full_name": "Sharpe, S.R."
+            },
+            {
+              "full_name": "Shutt, T."
+            },
+            {
+              "full_name": "Silari, M."
+            },
+            {
+              "full_name": "Sj\u00f6strand, T."
+            },
+            {
+              "full_name": "Skands, P."
+            },
+            {
+              "full_name": "Skwarnicki, T."
+            },
+            {
+              "full_name": "Smith, J.G."
+            },
+            {
+              "full_name": "Smoot, G.F."
+            },
+            {
+              "full_name": "Spanier, S."
+            },
+            {
+              "full_name": "Spieler, H."
+            },
+            {
+              "full_name": "Spiering, C."
+            },
+            {
+              "full_name": "Stahl, A."
+            },
+            {
+              "full_name": "Stone, S.L."
+            },
+            {
+              "full_name": "Sumino, Y."
+            },
+            {
+              "full_name": "Sumiyoshi, T."
+            },
+            {
+              "full_name": "Syphers, M.J."
+            },
+            {
+              "full_name": "Takahashi, F."
+            },
+            {
+              "full_name": "Tanabashi, M."
+            },
+            {
+              "full_name": "Terashi, K."
+            },
+            {
+              "full_name": "Terning, J."
+            },
+            {
+              "full_name": "Thorne, R.S."
+            },
+            {
+              "full_name": "Tiator, L."
+            },
+            {
+              "full_name": "Titov, M."
+            },
+            {
+              "full_name": "Tkachenko, N.P."
+            },
+            {
+              "full_name": "T\u00f6rnqvist, N.A."
+            },
+            {
+              "full_name": "Tovey, D."
+            },
+            {
+              "full_name": "Valencia, G."
+            },
+            {
+              "full_name": "van de Water, R."
+            },
+            {
+              "full_name": "Varelas, N."
+            },
+            {
+              "full_name": "Venanzoni, G."
+            },
+            {
+              "full_name": "Vincter, M.G."
+            },
+            {
+              "full_name": "Vogel, P."
+            },
+            {
+              "full_name": "Vogt, A."
+            },
+            {
+              "full_name": "Wakely, S.P."
+            },
+            {
+              "full_name": "Walkowiak, W."
+            },
+            {
+              "full_name": "Walter, C.W."
+            },
+            {
+              "full_name": "Wands, D."
+            },
+            {
+              "full_name": "Ward, D.R."
+            },
+            {
+              "full_name": "Wascko, M.O."
+            },
+            {
+              "full_name": "Weiglein, G."
+            },
+            {
+              "full_name": "Weinberg, D.H."
+            },
+            {
+              "full_name": "Weinberg, E.J."
+            },
+            {
+              "full_name": "White, M."
+            },
+            {
+              "full_name": "Wiencke, L.R."
+            },
+            {
+              "full_name": "Willocq, S."
+            },
+            {
+              "full_name": "Wohl, C.G."
+            },
+            {
+              "full_name": "Wolfenstein, L."
+            },
+            {
+              "full_name": "Womersley, J."
+            },
+            {
+              "full_name": "Woody, C.L."
+            },
+            {
+              "full_name": "Workman, R.L."
+            },
+            {
+              "full_name": "Yao, W.-M."
+            },
+            {
+              "full_name": "Zeller, G.P."
+            },
+            {
+              "full_name": "Zenin, O.V."
+            },
+            {
+              "full_name": "Zhu, R.-Y."
+            },
+            {
+              "full_name": "Zimmermann, F."
+            },
+            {
+              "full_name": "Zyla, P.A."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "40",
+              "artid": "100001",
+              "year": 2016,
+              "journal_issue": "10",
+              "journal_title": "Chin.Phys.C"
+            }
+          ],
+          "abstracts": [
+            {
+              "source": "IOP",
+              "value": "The Review summarizes much of particle physics and cosmology. Using data from previous editions, plus 3,062 new measurements from 721 papers, we list, evaluate, and average measured properties of gauge bosons and the recently discovered Higgs boson, leptons, quarks, mesons, and baryons. We summarize searches for hypothetical particles such as supersymmetric particles, heavy bosons, axions, dark photons, etc. All the particle properties and search limits are listed in Summary Tables. We also give numerous tables, figures, formulae, and reviews of topics such as Higgs Boson Physics, Supersymmetry, Grand Unified Theories, Neutrino Mixing, Dark Energy, Dark Matter, Cosmology, Particle Detectors, Colliders, Probability and Statistics. Among the 117 reviews are many that are new or heavily revised, including those on Pentaquarks and Inflation. The complete Review is published online in a journal and on the website of the Particle Data Group (http://pdg.lbl.gov). The printed PDG Book contains the Summary Tables and all review articles but no longer includes the detailed tables from the Particle Listings. A Booklet with the Summary Tables and abbreviated versions of some of the review articles is also available. Contents\u00a0 Abstract, Contributors, Highlights and Table of ContentsAcrobat PDF (150 KB)\u00a0 IntroductionAcrobat PDF (456 KB)\u00a0 Particle Physics Summary Tables Gauge and Higgs bosonsAcrobat PDF (155 KB) LeptonsAcrobat PDF (134 KB) QuarksAcrobat PDF (84 KB) MesonsAcrobat PDF (871 KB) BaryonsAcrobat PDF (300 KB) Searches (Supersymmetry, Compositeness, etc.)Acrobat PDF (91 KB) Tests of conservation lawsAcrobat PDF (330 KB)\u00a0 Reviews, Tables, and Plots Detailed contents for this sectionAcrobat PDF (37 KB) Constants, Units, Atomic and Nuclear PropertiesAcrobat PDF (278 KB) Standard Model and Related TopicsAcrobat PDF (7.3 MB) Astrophysics and CosmologyAcrobat PDF (2.7 MB) Experimental Methods and CollidersAcrobat PDF (3.8 MB) Mathematical Tools or Statistics, Monte Carlo, Group Theory\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0Acrobat PDF (1.3 MB) Kinematics, Cross-Section Formulae, and PlotsAcrobat PDF (3.9 MB)\u00a0 Particle Listings Illustrative key and abbreviationsAcrobat PDF (235 KB) Gauge and Higgs bosonsAcrobat PDF (2 MB) LeptonsAcrobat PDF (1.5 MB) QuarksAcrobat PDF (1.2 MB) Mesons: Light unflavored and strangeAcrobat PDF (4 MB) Mesons: Charmed and bottomAcrobat PDF (7.4 MB) Mesons: OtherAcrobat PDF (3.1 MB) BaryonsAcrobat PDF (3.97 MB) Miscellaneous searchesAcrobat PDF (2.4 MB)\u00a0 IndexAcrobat PDF (160 KB)",
+              "abstract_source_suggest": {
+                "input": "IOP"
+              }
+            }
+          ],
+          "control_number": 1489868,
+          "dois": [
+            {
+              "source": "IOP",
+              "value": "10.1088/1674-1137/40/10/100001"
+            }
+          ],
+          "titles": [
+            {
+              "title": "Review of Particle Physics"
+            },
+            {
+              "title": "Particle Physics Properties PDG RPP"
+            }
+          ],
+          "earliest_date": "2016-10-03"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/1489868?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/1489868?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/1489868?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/1489868?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/1489868?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/1489868?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A1489868"
+        },
+        "id": "1489868",
+        "updated": "2026-09-03T20:46:14.925679+00:00"
+      },
+      {
+        "created": "2002-01-23T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 7197,
+          "authors": [
+            {
+              "full_name": "Pumplin, J."
+            },
+            {
+              "full_name": "Stump, D.R."
+            },
+            {
+              "full_name": "Huston, J."
+            },
+            {
+              "full_name": "Lai, H.L."
+            },
+            {
+              "full_name": "Nadolsky, Pavel M."
+            },
+            {
+              "full_name": "Tung, W.K."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "07",
+              "artid": "012",
+              "year": 2002,
+              "journal_record": {
+                "$ref": "https://inspirehep.net/api/journals/1213103"
+              },
+              "page_start": "012",
+              "journal_title": "JHEP"
+            }
+          ],
+          "abstracts": [
+            {
+              "value": "A new generation of parton distribution functions with increased precision and quantitative estimates of uncertainties is presented. This work significantly extends previous CTEQ and other global analyses on two fronts: (i) a full treatment of available experimental correlated systematic errors for both new and old data sets: (ii) a systematic and pragmatic treatment of uncertainties of the parton distributions and their physical predictions, using a recently developed eigenvector-basis approach to the Hessian method. The new gluon distribution is considerably harder than that of previous standard fits. A number of physics issues, particularly relating to the behavior of the gluon distribution, are addressed in more quantitative terms than before. Extensive results on the uncertainties of parton distributions at various scales, and on parton luminosity functions at the Tevatron RunII and the LHC, are presented. The latter provide the means to quickly estimate the uncertainties of a wide range of physical processes at these high-energy hadron colliders, based on current knowledge of the parton distributions. In particular, the uncertainties on the production cross sections of the $W,Z$ at the Tevatron and the LHC are estimated to be $\\pm 4%$ and $\\pm 5%$ respectively, and that of a light Higgs at the LHC to be $\\pm 5%$."
+            }
+          ],
+          "control_number": 581996,
+          "dois": [
+            {
+              "value": "10.1088/1126-6708/2002/07/012"
+            }
+          ],
+          "arxiv_eprints": [
+            {
+              "categories": [
+                "hep-ph"
+              ],
+              "value": "hep-ph/0201195"
+            }
+          ],
+          "titles": [
+            {
+              "title": "New generation of parton distributions with uncertainties from global QCD analysis"
+            },
+            {
+              "title": "QUANTUM CHROMODYNAMICS"
+            },
+            {
+              "source": "arXiv",
+              "title": "New generation of parton distributions with uncertainties from global QCD analysis"
+            }
+          ],
+          "earliest_date": "2002-01"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/581996?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/581996?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/581996?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/581996?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/581996?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/581996?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A581996"
+        },
+        "id": "581996",
+        "updated": "2023-03-07T04:52:49.577698+00:00"
+      },
+      {
+        "created": "2020-08-19T00:00:00+00:00",
+        "metadata": {
+          "citation_count": 6834,
+          "authors": [
+            {
+              "full_name": "Zyla, P.A."
+            },
+            {
+              "full_name": "Barnett, R.M."
+            },
+            {
+              "full_name": "Beringer, J."
+            },
+            {
+              "full_name": "Dahl, O."
+            },
+            {
+              "full_name": "Dwyer, D.A."
+            },
+            {
+              "full_name": "Groom, D.E."
+            },
+            {
+              "full_name": "Lin, C. -J."
+            },
+            {
+              "full_name": "Lugovsky, K.S."
+            },
+            {
+              "full_name": "Pianori, E."
+            },
+            {
+              "full_name": "Robinson, D.J."
+            },
+            {
+              "full_name": "Wohl, C.G."
+            },
+            {
+              "full_name": "Yao, W. -M."
+            },
+            {
+              "full_name": "Agashe, K."
+            },
+            {
+              "full_name": "Aielli, G."
+            },
+            {
+              "full_name": "Allanach, B.C."
+            },
+            {
+              "full_name": "Amsler, C."
+            },
+            {
+              "full_name": "Antonelli, M."
+            },
+            {
+              "full_name": "Aschenauer, E.C."
+            },
+            {
+              "full_name": "Asner, D.M."
+            },
+            {
+              "full_name": "Baer, H."
+            },
+            {
+              "full_name": "Banerjee, Sw"
+            },
+            {
+              "full_name": "Baudis, L."
+            },
+            {
+              "full_name": "Bauer, C.W."
+            },
+            {
+              "full_name": "Beatty, J.J."
+            },
+            {
+              "full_name": "Belousov, V.I."
+            },
+            {
+              "full_name": "Bethke, S."
+            },
+            {
+              "full_name": "Bettini, A."
+            },
+            {
+              "full_name": "Biebel, O."
+            },
+            {
+              "full_name": "Black, K.M."
+            },
+            {
+              "full_name": "Blucher, E."
+            },
+            {
+              "full_name": "Buchmuller, O."
+            },
+            {
+              "full_name": "Burkert, V."
+            },
+            {
+              "full_name": "Bychkov, M.A."
+            },
+            {
+              "full_name": "Cahn, R.N."
+            },
+            {
+              "full_name": "Carena, M."
+            },
+            {
+              "full_name": "Ceccucci, A."
+            },
+            {
+              "full_name": "Cerri, A."
+            },
+            {
+              "full_name": "Chakraborty, D."
+            },
+            {
+              "full_name": "Chivukula, R.Sekhar"
+            },
+            {
+              "full_name": "Cowan, G."
+            },
+            {
+              "full_name": "D'Ambrosio, G."
+            },
+            {
+              "full_name": "Damour, T."
+            },
+            {
+              "full_name": "de Florian, D."
+            },
+            {
+              "full_name": "de Gouv\u00eaa, A."
+            },
+            {
+              "full_name": "DeGrand, T."
+            },
+            {
+              "full_name": "de Jong, P."
+            },
+            {
+              "full_name": "Dissertori, G."
+            },
+            {
+              "full_name": "Dobrescu, B.A."
+            },
+            {
+              "full_name": "D'Onofrio, M."
+            },
+            {
+              "full_name": "Doser, M."
+            },
+            {
+              "full_name": "Drees, M."
+            },
+            {
+              "full_name": "Dreiner, H.K."
+            },
+            {
+              "full_name": "Eerola, P."
+            },
+            {
+              "full_name": "Egede, U."
+            },
+            {
+              "full_name": "Eidelman, S."
+            },
+            {
+              "full_name": "Ellis, J."
+            },
+            {
+              "full_name": "Erler, J."
+            },
+            {
+              "full_name": "Ezhela, V.V."
+            },
+            {
+              "full_name": "Fetscher, W."
+            },
+            {
+              "full_name": "Fields, B.D."
+            },
+            {
+              "full_name": "Foster, B."
+            },
+            {
+              "full_name": "Freitas, A."
+            },
+            {
+              "full_name": "Gallagher, H."
+            },
+            {
+              "full_name": "Garren, L."
+            },
+            {
+              "full_name": "Gerber, H. -J."
+            },
+            {
+              "full_name": "Gerbier, G."
+            },
+            {
+              "full_name": "Gershon, T."
+            },
+            {
+              "full_name": "Gershtein, Y."
+            },
+            {
+              "full_name": "Gherghetta, T."
+            },
+            {
+              "full_name": "Godizov, A.A."
+            },
+            {
+              "full_name": "Gonzalez-Garcia, M.C."
+            },
+            {
+              "full_name": "Goodman, M."
+            },
+            {
+              "full_name": "Grab, C."
+            },
+            {
+              "full_name": "Gritsan, A.V."
+            },
+            {
+              "full_name": "Grojean, C."
+            },
+            {
+              "full_name": "Gr\u00fcnewald, M."
+            },
+            {
+              "full_name": "Gurtu, A."
+            },
+            {
+              "full_name": "Gutsche, T."
+            },
+            {
+              "full_name": "Haber, H.E."
+            },
+            {
+              "full_name": "Hanhart, C."
+            },
+            {
+              "full_name": "Hashimoto, S."
+            },
+            {
+              "full_name": "Hayato, Y."
+            },
+            {
+              "full_name": "Hebecker, A."
+            },
+            {
+              "full_name": "Heinemeyer, S."
+            },
+            {
+              "full_name": "Heltsley, B."
+            },
+            {
+              "full_name": "Hern\u00e1ndez-Rey, J.J."
+            },
+            {
+              "full_name": "Hikasa, K."
+            },
+            {
+              "full_name": "Hisano, J."
+            },
+            {
+              "full_name": "H\u00f6cker, A."
+            },
+            {
+              "full_name": "Holder, J."
+            },
+            {
+              "full_name": "Holtkamp, A."
+            },
+            {
+              "full_name": "Huston, J."
+            },
+            {
+              "full_name": "Hyodo, T."
+            },
+            {
+              "full_name": "Johnson, K.F."
+            },
+            {
+              "full_name": "Kado, M."
+            },
+            {
+              "full_name": "Karliner, M."
+            },
+            {
+              "full_name": "Katz, U.F."
+            },
+            {
+              "full_name": "Kenzie, M."
+            },
+            {
+              "full_name": "Khoze, V.A."
+            },
+            {
+              "full_name": "Klein, S.R."
+            },
+            {
+              "full_name": "Klempt, E."
+            },
+            {
+              "full_name": "Kowalewski, R.V."
+            },
+            {
+              "full_name": "Krauss, F."
+            },
+            {
+              "full_name": "Kreps, M."
+            },
+            {
+              "full_name": "Krusche, B."
+            },
+            {
+              "full_name": "Kwon, Y."
+            },
+            {
+              "full_name": "Lahav, O."
+            },
+            {
+              "full_name": "Laiho, J."
+            },
+            {
+              "full_name": "Lellouch, L.P."
+            },
+            {
+              "full_name": "Lesgourgues, J."
+            },
+            {
+              "full_name": "Liddle, A.R."
+            },
+            {
+              "full_name": "Ligeti, Z."
+            },
+            {
+              "full_name": "Lippmann, C."
+            },
+            {
+              "full_name": "Liss, T.M."
+            },
+            {
+              "full_name": "Littenberg, L."
+            },
+            {
+              "full_name": "Lourengo, C."
+            },
+            {
+              "full_name": "Lugovsky, S.B."
+            },
+            {
+              "full_name": "Lusiani, A."
+            },
+            {
+              "full_name": "Makida, Y."
+            },
+            {
+              "full_name": "Maltoni, F."
+            },
+            {
+              "full_name": "Mannel, T."
+            },
+            {
+              "full_name": "Manohar, A.V."
+            },
+            {
+              "full_name": "Marciano, W.J."
+            },
+            {
+              "full_name": "Masoni, A."
+            },
+            {
+              "full_name": "Matthews, J."
+            },
+            {
+              "full_name": "Mei\u00dfner, U. -G."
+            },
+            {
+              "full_name": "Mikhasenko, M."
+            },
+            {
+              "full_name": "Miller, D.J."
+            },
+            {
+              "full_name": "Milstead, D."
+            },
+            {
+              "full_name": "Mitchell, R.E."
+            },
+            {
+              "full_name": "M\u00f6nig, K."
+            },
+            {
+              "full_name": "Molaro, P."
+            },
+            {
+              "full_name": "Moortgat, F."
+            },
+            {
+              "full_name": "Moskovic, M."
+            },
+            {
+              "full_name": "Nakamura, K."
+            },
+            {
+              "full_name": "Narain, M."
+            },
+            {
+              "full_name": "Nason, P."
+            },
+            {
+              "full_name": "Navas, S."
+            },
+            {
+              "full_name": "Neubert, M."
+            },
+            {
+              "full_name": "Nevski, P."
+            },
+            {
+              "full_name": "Nir, Y."
+            },
+            {
+              "full_name": "Olive, K.A."
+            },
+            {
+              "full_name": "Patrignani, C."
+            },
+            {
+              "full_name": "Peacock, J.A."
+            },
+            {
+              "full_name": "Petcov, S.T."
+            },
+            {
+              "full_name": "Petrov, V.A."
+            },
+            {
+              "full_name": "Pich, A."
+            },
+            {
+              "full_name": "Piepke, A."
+            },
+            {
+              "full_name": "Pomarol, A."
+            },
+            {
+              "full_name": "Profumo, S."
+            },
+            {
+              "full_name": "Quadt, A."
+            },
+            {
+              "full_name": "Rabbertz, K."
+            },
+            {
+              "full_name": "Rademacker, J."
+            },
+            {
+              "full_name": "Raffelt, G."
+            },
+            {
+              "full_name": "Ramani, H."
+            },
+            {
+              "full_name": "Ramsey-Musolf, M."
+            },
+            {
+              "full_name": "Ratcliff, B.N."
+            },
+            {
+              "full_name": "Richardson, P."
+            },
+            {
+              "full_name": "Ringwald, A."
+            },
+            {
+              "full_name": "Roesler, S."
+            },
+            {
+              "full_name": "Rolli, S."
+            },
+            {
+              "full_name": "Romaniouk, A."
+            },
+            {
+              "full_name": "Rosenberg, L.J."
+            },
+            {
+              "full_name": "Rosner, J.L."
+            },
+            {
+              "full_name": "Rybka, G."
+            },
+            {
+              "full_name": "Ryskin, M."
+            },
+            {
+              "full_name": "Ryutin, R.A."
+            },
+            {
+              "full_name": "Sakai, Y."
+            },
+            {
+              "full_name": "Salam, G.P."
+            },
+            {
+              "full_name": "Sarkar, S."
+            },
+            {
+              "full_name": "Sauli, F."
+            },
+            {
+              "full_name": "Schneider, O."
+            },
+            {
+              "full_name": "Scholberg, K."
+            },
+            {
+              "full_name": "Schwartz, A.J."
+            },
+            {
+              "full_name": "Schwiening, J."
+            },
+            {
+              "full_name": "Scott, D."
+            },
+            {
+              "full_name": "Sharma, V."
+            },
+            {
+              "full_name": "Sharpe, S.R."
+            },
+            {
+              "full_name": "Shutt, T."
+            },
+            {
+              "full_name": "Silari, M."
+            },
+            {
+              "full_name": "Sj\u00f6strand, T."
+            },
+            {
+              "full_name": "Skands, P."
+            },
+            {
+              "full_name": "Skwarnicki, T."
+            },
+            {
+              "full_name": "Smoot, G.F."
+            },
+            {
+              "full_name": "Soffer, A."
+            },
+            {
+              "full_name": "Sozzi, M.S."
+            },
+            {
+              "full_name": "Spanier, S."
+            },
+            {
+              "full_name": "Spiering, C."
+            },
+            {
+              "full_name": "Stahl, A."
+            },
+            {
+              "full_name": "Stone, S.L."
+            },
+            {
+              "full_name": "Sumino, Y."
+            },
+            {
+              "full_name": "Sumiyoshi, T."
+            },
+            {
+              "full_name": "Syphers, M.J."
+            },
+            {
+              "full_name": "Takahashi, F."
+            },
+            {
+              "full_name": "Tanabashi, M."
+            },
+            {
+              "full_name": "Tanaka, J."
+            },
+            {
+              "full_name": "Ta\u0161evsk\u00fd, M."
+            },
+            {
+              "full_name": "Terashi, K."
+            },
+            {
+              "full_name": "Terning, J."
+            },
+            {
+              "full_name": "Thoma, U."
+            },
+            {
+              "full_name": "Thorne, R.S."
+            },
+            {
+              "full_name": "Tiator, L."
+            },
+            {
+              "full_name": "Titov, M."
+            },
+            {
+              "full_name": "Tkachenko, N.P."
+            },
+            {
+              "full_name": "Tovey, D.R."
+            },
+            {
+              "full_name": "Trabelsi, K."
+            },
+            {
+              "full_name": "Urquijo, P."
+            },
+            {
+              "full_name": "Valencia, G."
+            },
+            {
+              "full_name": "Van de Water, R."
+            },
+            {
+              "full_name": "Varelas, N."
+            },
+            {
+              "full_name": "Venanzoni, G."
+            },
+            {
+              "full_name": "Verde, L."
+            },
+            {
+              "full_name": "Vincter, M.G."
+            },
+            {
+              "full_name": "Vogel, P."
+            },
+            {
+              "full_name": "Vogelsang, W."
+            },
+            {
+              "full_name": "Vogt, A."
+            },
+            {
+              "full_name": "Vorobyev, V."
+            },
+            {
+              "full_name": "Wakely, S.P."
+            },
+            {
+              "full_name": "Walkowiak, W."
+            },
+            {
+              "full_name": "Walter, C.W."
+            },
+            {
+              "full_name": "Wands, D."
+            },
+            {
+              "full_name": "Wascko, M.O."
+            },
+            {
+              "full_name": "Weinberg, D.H."
+            },
+            {
+              "full_name": "Weinberg, E.J."
+            },
+            {
+              "full_name": "White, M."
+            },
+            {
+              "full_name": "Wiencke, L.R."
+            },
+            {
+              "full_name": "Willocq, S."
+            },
+            {
+              "full_name": "Woody, C.L."
+            },
+            {
+              "full_name": "Workman, R.L."
+            },
+            {
+              "full_name": "Yokoyama, M."
+            },
+            {
+              "full_name": "Yoshida, R."
+            },
+            {
+              "full_name": "Zanderighi, G."
+            },
+            {
+              "full_name": "Zeller, G.P."
+            },
+            {
+              "full_name": "Zenin, O.V."
+            },
+            {
+              "full_name": "Zhu, R. -Y."
+            },
+            {
+              "full_name": "Zhu, S. -L."
+            },
+            {
+              "full_name": "Zimmermann, F."
+            },
+            {
+              "full_name": "Anderson, J."
+            },
+            {
+              "full_name": "Basaglia, T."
+            },
+            {
+              "full_name": "Lugovsky, V.S."
+            },
+            {
+              "full_name": "Schaffner, P."
+            },
+            {
+              "full_name": "Zheng, W."
+            }
+          ],
+          "publication_info": [
+            {
+              "journal_volume": "2020",
+              "artid": "083C01",
+              "year": 2020,
+              "journal_record": {
+                "$ref": "https://inspirehep.net/api/journals/1211579"
+              },
+              "journal_issue": "8",
+              "journal_title": "PTEP"
+            }
+          ],
+          "abstracts": [
+            {
+              "source": "Oxford University Press",
+              "value": "The Review summarizes much of particle physics and cosmology. Using data from previous editions, plus 3,324 new measurements from 878 papers, we list, evaluate, and average measured properties of gauge bosons and the recently discovered Higgs boson, leptons, quarks, mesons, and baryons. We summarize searches for hypothetical particles such as supersymmetric particles, heavy bosons, axions, dark photons, etc. Particle properties and search limits are listed in Summary Tables. We give numerous tables, figures, formulae, and reviews of topics such as Higgs Boson Physics, Supersymmetry, Grand Unified Theories, Neutrino Mixing, Dark Energy, Dark Matter, Cosmology, Particle Detectors, Colliders, Probability and Statistics. Among the 120 reviews are many that are new or heavily revised, including a new review on High Energy Soft QCD and Diffraction and one on the Determination of CKM Angles from B Hadrons.",
+              "abstract_source_suggest": {
+                "input": "Oxford University Press"
+              }
+            }
+          ],
+          "control_number": 1812251,
+          "dois": [
+            {
+              "source": "Oxford University Press",
+              "value": "10.1093/ptep/ptaa104"
+            }
+          ],
+          "titles": [
+            {
+              "source": "Oxford University Press",
+              "title": "Review of Particle Physics"
+            },
+            {
+              "title": "Particle Physics Properties PDG RPP"
+            }
+          ],
+          "earliest_date": "2020-08-14"
+        },
+        "links": {
+          "bibtex": "https://inspirehep.net/api/literature/1812251?format=bibtex",
+          "latex-eu": "https://inspirehep.net/api/literature/1812251?format=latex-eu",
+          "latex-us": "https://inspirehep.net/api/literature/1812251?format=latex-us",
+          "json": "https://inspirehep.net/api/literature/1812251?format=json",
+          "json-expanded": "https://inspirehep.net/api/literature/1812251?format=json-expanded",
+          "cv": "https://inspirehep.net/api/literature/1812251?format=cv",
+          "citations": "https://inspirehep.net/api/literature/?q=refersto%3Arecid%3A1812251"
+        },
+        "id": "1812251",
+        "updated": "2026-09-03T20:46:15.405521+00:00"
+      }
+    ]
+  }
+}
