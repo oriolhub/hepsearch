@@ -85,4 +85,4 @@
 - [x] 7.3 Commit as `HS-003: Create the Django project skeleton`, body covering
       why `SECRET_KEY` is required, why the health check uses `SELECT 1`, and the
       `check --deploy` findings
-- [ ] 7.4 `openspec archive django-project-skeleton`
+- [x] 7.4 `openspec archive django-project-skeleton`
