@@ -1,6 +1,6 @@
 # HS-008: Add a minimal search page
 
-**Status:** backlog
+**Status:** in progress
 **Depends on:** HS-007
 
 ## Story
@@ -16,6 +16,10 @@ the two can never disagree about ranking.
 
 Deliberately ugly-but-usable at this stage; polish is HS-014, after the ranking
 is actually good.
+
+This card ships as two commits: the first bounds author data and adds shared
+display helpers; the second adds the page. The split keeps each commit focused
+and leaves the application working at every step.
 
 ## Acceptance criteria
 
@@ -42,4 +46,5 @@ is actually good.
 ## Out of scope
 
 Styling and polish (HS-014), semantic results (HS-011), pagination (HS-013), any
-JavaScript framework (never).
+JavaScript framework (never). The DRF browsable API still renders its own
+unbounded HTML representation; HS-013 owns that hardening.

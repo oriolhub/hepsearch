@@ -1,9 +1,13 @@
+import datetime
 from typing import ClassVar
 
+from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
+
+from .presentation import excerpt_abstract
 
 # The text search configuration used to build the search vector. Named so that the
 # retrieval layer (apps/search) and any future hybrid ranker use the identical value
@@ -63,7 +67,38 @@ class Paper(models.Model):
     def author_summary(self, max_authors: int = 3) -> str:
         if not self.authors:
             return ""
+        leading = "; ".join(self.authors[:max_authors])
         if len(self.authors) <= max_authors:
-            return ", ".join(self.authors)
-        leading = ", ".join(self.authors[:max_authors])
+            return leading
         return f"{leading} et al. ({len(self.authors)})"
+
+    @property
+    def display_authors(self) -> str:
+        return self.author_summary(5)
+
+    @property
+    def display_date(self) -> str:
+        value = self.earliest_date
+        if not value:
+            return ""
+        try:
+            parts = value.split("-")
+            if len(parts) == 1 and len(parts[0]) == 4:
+                year = int(parts[0])
+                datetime.date(year, 1, 1)
+                return parts[0]
+            if len(parts) == 2 and len(parts[0]) == 4 and len(parts[1]) == 2:
+                year, month = (int(part) for part in parts)
+                date = datetime.date(year, month, 1)
+                return f"{date:%B} {year}"
+            if len(parts) == 3 and all(len(part) == 2 for part in parts[1:]):
+                year, month, day = (int(part) for part in parts)
+                date = datetime.date(year, month, day)
+                return f"{date.day} {date:%B} {date.year}"
+        except (TypeError, ValueError):
+            return ""
+        return ""
+
+    @property
+    def abstract_snippet(self) -> str:
+        return excerpt_abstract(self.abstract, settings.ABSTRACT_SNIPPET_CHARS)

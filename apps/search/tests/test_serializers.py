@@ -3,7 +3,8 @@ import datetime
 import pytest
 
 from apps.papers.models import Paper
-from apps.search.serializers import PaperSearchResultSerializer, complete_date, excerpt_abstract
+from apps.papers.presentation import excerpt_abstract
+from apps.search.serializers import PaperSearchResultSerializer, complete_date
 
 
 def make_paper(inspire_id, **overrides):
@@ -31,9 +32,49 @@ def test_a_result_carries_every_required_field():
     assert data["id"] == paper.pk
     assert data["title"] == "A title"
     assert data["authors"] == ["A. Author"]
+    assert data["author_count"] == 1
     assert data["publication_date"] == datetime.date(2020, 5, 10)
     assert data["abstract_snippet"] == "An abstract"
     assert data["inspire_url"] == "https://inspirehep.net/literature/42"
+
+
+@pytest.mark.django_db
+def test_serializer_bounds_authors_and_reports_the_total():
+    paper = Paper.objects.create(
+        inspire_id=43,
+        title="A title",
+        abstract="An abstract",
+        authors=[f"Author {index}" for index in range(1000)],
+    )
+
+    data = PaperSearchResultSerializer(paper).data
+
+    assert data["authors"] == [f"Author {index}" for index in range(5)]
+    assert data["author_count"] == 1000
+
+
+@pytest.mark.django_db
+def test_serializer_returns_all_short_author_lists_and_zero_for_empty():
+    short = Paper.objects.create(
+        inspire_id=44,
+        title="Short",
+        abstract="An abstract",
+        authors=["First", "Second"],
+    )
+    empty = Paper.objects.create(
+        inspire_id=45,
+        title="Empty",
+        abstract="An abstract",
+        authors=[],
+    )
+
+    short_data = PaperSearchResultSerializer(short).data
+    empty_data = PaperSearchResultSerializer(empty).data
+
+    assert short_data["authors"] == ["First", "Second"]
+    assert short_data["author_count"] == 2
+    assert empty_data["authors"] == []
+    assert empty_data["author_count"] == 0
 
 
 @pytest.mark.parametrize(

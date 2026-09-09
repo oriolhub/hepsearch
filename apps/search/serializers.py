@@ -33,25 +33,11 @@ def complete_date(value: str) -> datetime.date | None:
         return None
 
 
-def excerpt_abstract(abstract: str, max_chars: int) -> str:
-    """Return `abstract` unchanged if it fits within `max_chars`. Otherwise cut it at
-    the last word boundary at or before `max_chars` and append an ellipsis, so a
-    truncated excerpt never splits a word and is always distinguishable from a
-    complete one.
-    """
-    if len(abstract) <= max_chars:
-        return abstract
-    cut = abstract[:max_chars]
-    last_space = cut.rfind(" ")
-    if last_space > 0:
-        cut = cut[:last_space]
-    return f"{cut.rstrip()}\u2026"
-
-
 class PaperSearchResultSerializer(serializers.Serializer):
     id = serializers.IntegerField(source="pk")
     title = serializers.CharField()
-    authors = serializers.ListField(child=serializers.CharField())
+    authors = serializers.SerializerMethodField()
+    author_count = serializers.SerializerMethodField()
     publication_date = serializers.SerializerMethodField()
     abstract_snippet = serializers.SerializerMethodField()
     inspire_url = serializers.CharField()
@@ -60,4 +46,10 @@ class PaperSearchResultSerializer(serializers.Serializer):
         return complete_date(paper.earliest_date)
 
     def get_abstract_snippet(self, paper: Paper) -> str:
-        return excerpt_abstract(paper.abstract, settings.ABSTRACT_SNIPPET_CHARS)
+        return paper.abstract_snippet
+
+    def get_authors(self, paper: Paper) -> list[str]:
+        return paper.authors[: settings.SEARCH_AUTHOR_SAMPLE_SIZE]
+
+    def get_author_count(self, paper: Paper) -> int:
+        return len(paper.authors)

@@ -24,6 +24,7 @@ INSPIRE_BACKOFF_BASE = env.float("INSPIRE_BACKOFF_BASE", default=1.0)
 INGEST_BATCH_SIZE = env.int("INGEST_BATCH_SIZE", default=INSPIRE_PAGE_SIZE)
 # Bounds both the response size and the work the database does per search request.
 SEARCH_RESULT_LIMIT = env.int("SEARCH_RESULT_LIMIT", default=20)
+SEARCH_AUTHOR_SAMPLE_SIZE = env.int("SEARCH_AUTHOR_SAMPLE_SIZE", default=5)
 # Bounds the abstract excerpt returned by the search API; a presentation constant, not
 # a stored value.
 ABSTRACT_SNIPPET_CHARS = env.int("ABSTRACT_SNIPPET_CHARS", default=280)

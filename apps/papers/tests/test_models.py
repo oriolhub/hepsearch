@@ -87,13 +87,56 @@ def test_author_summary():
     assert p_empty.author_summary() == ""
 
     p_short = Paper(authors=["Alice Smith", "Bob Jones"])
-    assert p_short.author_summary() == "Alice Smith, Bob Jones"
+    assert p_short.author_summary() == "Alice Smith; Bob Jones"
 
     p_exact_3 = Paper(authors=["Alice Smith", "Bob Jones", "Carol White"])
-    assert p_exact_3.author_summary() == "Alice Smith, Bob Jones, Carol White"
+    assert p_exact_3.author_summary() == "Alice Smith; Bob Jones; Carol White"
 
     p_long = Paper(authors=["Alice Smith", "Bob Jones", "Carol White", "Dave Black"])
-    assert p_long.author_summary() == "Alice Smith, Bob Jones, Carol White et al. (4)"
+    assert p_long.author_summary() == "Alice Smith; Bob Jones; Carol White et al. (4)"
+
+
+def test_display_authors_uses_five_names_and_total():
+    paper = Paper(
+        authors=[
+            "A, One",
+            "B, Two",
+            "C, Three",
+            "D, Four",
+            "E, Five",
+            "F, Six",
+        ]
+    )
+
+    assert paper.display_authors == ("A, One; B, Two; C, Three; D, Four; E, Five et al. (6)")
+
+
+def test_display_authors_is_empty_without_authors():
+    assert Paper(authors=[]).display_authors == ""
+
+
+@pytest.mark.parametrize(
+    ("stored", "expected"),
+    [
+        ("2016-10-25", "25 October 2016"),
+        ("2012-07", "July 2012"),
+        ("2014", "2014"),
+        ("", ""),
+        ("not-a-date", ""),
+    ],
+)
+def test_display_date_preserves_stored_precision(stored, expected):
+    paper = Paper(earliest_date=stored)
+
+    assert paper.display_date == expected
+    assert paper.earliest_date == stored
+
+
+def test_abstract_snippet_uses_the_shared_excerpt_rule():
+    paper = Paper(abstract="word " * 100)
+
+    assert paper.abstract_snippet.endswith("\u2026")
+    assert not paper.abstract_snippet[:-1].endswith(" ")
 
 
 @pytest.mark.django_db
