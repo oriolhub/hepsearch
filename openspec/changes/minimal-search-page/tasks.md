@@ -72,68 +72,68 @@ demonstrable (AGENTS.md §7).
 
 ### 5. The view and the route
 
-- [ ] 5.1 Add a plain Django view to `apps/search/views.py`, beside the existing DRF
+- [x] 5.1 Add a plain Django view to `apps/search/views.py`, beside the existing DRF
       view, not replacing it
-- [ ] 5.2 Read `q` from the query string; treat absent and whitespace-only identically
-- [ ] 5.3 Call `ranking.search()` with `settings.SEARCH_RESULT_LIMIT` — never a copy of
+- [x] 5.2 Read `q` from the query string; treat absent and whitespace-only identically
+- [x] 5.3 Call `ranking.search()` with `settings.SEARCH_RESULT_LIMIT` — never a copy of
       the ranking logic, never an HTTP call to the project's own API
-- [ ] 5.4 Skip the search entirely when there is no real query, so an empty submission
+- [x] 5.4 Skip the search entirely when there is no real query, so an empty submission
       costs no database work
-- [ ] 5.5 Pass the submitted query back to the template so it can be redisplayed
-- [ ] 5.6 Distinguish "no query was asked" from "a query matched nothing" in the
+- [x] 5.5 Pass the submitted query back to the template so it can be redisplayed
+- [x] 5.6 Distinguish "no query was asked" from "a query matched nothing" in the
       context, so the template can stay free of that logic
-- [ ] 5.7 Route `""` to the view in `config/urls.py`, keeping the existing direct-import
+- [x] 5.7 Route `""` to the view in `config/urls.py`, keeping the existing direct-import
       pattern rather than adding `apps/search/urls.py`
-- [ ] 5.8 Confirm the view module still imports nothing from `apps.ingestion`
+- [x] 5.8 Confirm the view module still imports nothing from `apps.ingestion`
 
 ### 6. The template
 
-- [ ] 6.1 Create `apps/search/templates/search/search.html` — one template, no
+- [x] 6.1 Create `apps/search/templates/search/search.html` — one template, no
       `base.html`
-- [ ] 6.2 Render a `GET` form with a text input named `q` and a submit control
-- [ ] 6.3 Redisplay the submitted query as the input's value
-- [ ] 6.4 Render each result: title linked to `paper.inspire_url`, `display_authors`,
+- [x] 6.2 Render a `GET` form with a text input named `q` and a submit control
+- [x] 6.3 Redisplay the submitted query as the input's value
+- [x] 6.4 Render each result: title linked to `paper.inspire_url`, `display_authors`,
       `display_date`, `abstract_snippet`
-- [ ] 6.5 Omit the author line entirely when `display_authors` is empty
-- [ ] 6.6 Render a "no results" message only when a real query matched nothing
-- [ ] 6.7 Render neither results nor a "no results" message on a first visit or an empty
+- [x] 6.5 Omit the author line entirely when `display_authors` is empty
+- [x] 6.6 Render a "no results" message only when a real query matched nothing
+- [x] 6.7 Render neither results nor a "no results" message on a first visit or an empty
       submission
-- [ ] 6.8 Keep Django's autoescaping on — no `|safe`, no `mark_safe`, anywhere
-- [ ] 6.9 Put the small amount of CSS in an inline `<style>` block; add no static files
-- [ ] 6.10 Confirm the page renders without executing any client-side script
+- [x] 6.8 Keep Django's autoescaping on — no `|safe`, no `mark_safe`, anywhere
+- [x] 6.9 Put the small amount of CSS in an inline `<style>` block; add no static files
+- [x] 6.10 Confirm the page renders without executing any client-side script
 
 ### 7. Tests for commit 2
 
-- [ ] 7.1 A query renders the expected paper titles in the HTML
-- [ ] 7.2 A result links to the paper's INSPIRE URL
-- [ ] 7.3 A query containing `<script>` is escaped — the raw tag is absent, the escaped
+- [x] 7.1 A query renders the expected paper titles in the HTML
+- [x] 7.2 A result links to the paper's INSPIRE URL
+- [x] 7.3 A query containing `<script>` is escaped — the raw tag is absent, the escaped
       text present
-- [ ] 7.4 The submitted query is redisplayed in the input, escaped
-- [ ] 7.5 A query matching nothing renders the "no results" message, status 200
-- [ ] 7.6 A first visit with no `q` renders the form, status 200, with no error and no
+- [x] 7.4 The submitted query is redisplayed in the input, escaped
+- [x] 7.5 A query matching nothing renders the "no results" message, status 200
+- [x] 7.6 A first visit with no `q` renders the form, status 200, with no error and no
       "no results" message
-- [ ] 7.7 An empty `q` behaves identically to a first visit
-- [ ] 7.8 A whitespace-only `q` behaves identically to a first visit
-- [ ] 7.9 A collaboration paper renders a summarised author line, not thousands of names
-- [ ] 7.10 A paper with no authors renders no author line
-- [ ] 7.11 The page and the API return the same papers in the same order for one query
-- [ ] 7.12 Confirm no page test makes a network request
+- [x] 7.7 An empty `q` behaves identically to a first visit
+- [x] 7.8 A whitespace-only `q` behaves identically to a first visit
+- [x] 7.9 A collaboration paper renders a summarised author line, not thousands of names
+- [x] 7.10 A paper with no authors renders no author line
+- [x] 7.11 The page and the API return the same papers in the same order for one query
+- [x] 7.12 Confirm no page test makes a network request
 
 ### 8. Verify against the real corpus
 
-- [ ] 8.1 Run the page by hand against the ingested 5,000 papers and read the results
-- [ ] 8.2 Confirm a collaboration-heavy query renders in reasonable time and does not
+- [x] 8.1 Run the page by hand against the ingested 5,000 papers and read the results
+- [x] 8.2 Confirm a collaboration-heavy query renders in reasonable time and does not
       produce a wall of author names
-- [ ] 8.3 Confirm a year-only paper shows just its year, with no fabricated day
-- [ ] 8.4 Record the query used and what it returned in the commit body
+- [x] 8.3 Confirm a year-only paper shows just its year, with no fabricated day
+- [x] 8.4 Record the query used and what it returned in the commit body
 
 ### 9. Gates and commit 2
 
-- [ ] 9.1 `uv run pytest`
-- [ ] 9.2 `uv run ruff check .`
-- [ ] 9.3 `uv run ruff format --check .`
-- [ ] 9.4 Tick the card's acceptance criteria and Definition of Done
-- [ ] 9.5 Note on the card that the DRF browsable API still renders unbounded HTML, for
+- [x] 9.1 `uv run pytest`
+- [x] 9.2 `uv run ruff check .`
+- [x] 9.3 `uv run ruff format --check .`
+- [x] 9.4 Tick the card's acceptance criteria and Definition of Done
+- [x] 9.5 Note on the card that the DRF browsable API still renders unbounded HTML, for
       HS-013
-- [ ] 9.6 `git mv` the card from `board/in-progress/` to `board/done/` in this commit
-- [ ] 9.7 Commit as `HS-008: Add a minimal search page`
+- [x] 9.6 `git mv` the card from `board/in-progress/` to `board/done/` in this commit
+- [x] 9.7 Commit as `HS-008: Add a minimal search page`

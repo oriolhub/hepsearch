@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>hepsearch</title>
+    <style>
+        body {
+            color: #222;
+            font-family: system-ui, sans-serif;
+            line-height: 1.5;
+            margin: 0 auto;
+            max-width: 52rem;
+            padding: 2rem 1rem;
+        }
+        form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        input {
+            flex: 1;
+            font: inherit;
+            padding: 0.5rem;
+        }
+        button {
+            font: inherit;
+            padding: 0.5rem 1rem;
+        }
+        article {
+            border-top: 1px solid #ddd;
+            padding: 1rem 0;
+        }
+        h2 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        .authors,
+        .date {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .abstract {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>hepsearch</h1>
+    <form method="get">
+        <label for="query">Search papers</label>
+        <input id="query" name="q" type="search" value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if no_results %}
+        <p role="status">No results found.</p>
+    {% elif has_query %}
+        {% for paper in papers %}
+            <article>
+                <h2><a href="{{ paper.inspire_url }}">{{ paper.title }}</a></h2>
+                {% if paper.display_authors %}
+                    <div class="authors">{{ paper.display_authors }}</div>
+                {% endif %}
+                {% if paper.display_date %}
+                    <div class="date">{{ paper.display_date }}</div>
+                {% endif %}
+                <p class="abstract">{{ paper.abstract_snippet }}</p>
+            </article>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

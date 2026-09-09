@@ -1,6 +1,6 @@
 # HS-008: Add a minimal search page
 
-**Status:** in progress
+**Status:** done
 **Depends on:** HS-007
 
 ## Story
@@ -23,25 +23,25 @@ and leaves the application working at every step.
 
 ## Acceptance criteria
 
-- [ ] `GET /` renders a page with a search input and a submit button
-- [ ] Submitting a query renders ranked results: title (linked to INSPIRE),
+- [x] `GET /` renders a page with a search input and a submit button
+- [x] Submitting a query renders ranked results: title (linked to INSPIRE),
       authors, date, and an abstract snippet
-- [ ] The view calls the shared search function, not a copy of the ranking logic
-- [ ] The submitted query stays visible in the input after submission
-- [ ] Zero results renders a clear "no results" message, not an empty page
-- [ ] An empty submission re-renders the form without an error page
-- [ ] All user-supplied text is escaped — a query containing `<script>` renders
+- [x] The view calls the shared search function, not a copy of the ranking logic
+- [x] The submitted query stays visible in the input after submission
+- [x] Zero results renders a clear "no results" message, not an empty page
+- [x] An empty submission re-renders the form without an error page
+- [x] All user-supplied text is escaped — a query containing `<script>` renders
       as literal text
-- [ ] Static assets, if any, are served through Django's staticfiles
-- [ ] A test asserts a query renders expected paper titles in the HTML
-- [ ] A test asserts the `<script>` query is escaped
+- [x] Static assets, if any, are served through Django's staticfiles
+- [x] A test asserts a query renders expected paper titles in the HTML
+- [x] A test asserts the `<script>` query is escaped
 
 ## Definition of done
 
-- [ ] Acceptance criteria met
-- [ ] The page has been used by hand against the real corpus
-- [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
-- [ ] Committed as `HS-008: Add a minimal search page`
+- [x] Acceptance criteria met
+- [x] The page has been used by hand against the real corpus
+- [x] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
+- [x] Committed as `HS-008: Add a minimal search page`
 
 ## Out of scope
 
