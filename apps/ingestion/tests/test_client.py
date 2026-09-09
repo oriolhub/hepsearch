@@ -195,10 +195,37 @@ def test_iter_records_yields_usable_limit_and_stops_at_total():
         calls.append((query, page, size))
         return pages[page]
 
-    papers = list(iter_records("test", 2, fetcher, page_size=250))
+    results = list(iter_records("test", 2, fetcher, page_size=250))
 
-    assert [paper.inspire_id for paper in papers] == [2, 3]
+    # Record 1 has no abstract and yields None; records 2 and 3 yield papers.
+    assert results[0] is None
+    assert [paper.inspire_id for paper in results[1:]] == [2, 3]
     assert calls == [("test", 1, 250), ("test", 2, 250)]
+
+
+def test_iter_records_yields_one_result_per_fetched_record():
+    def fetcher(query, page, size):
+        return {
+            "hits": {
+                "total": 2,
+                "hits": [
+                    {"metadata": {"control_number": 1, "titles": [{"title": "No abstract"}]}},
+                    {
+                        "metadata": {
+                            "control_number": 2,
+                            "titles": [{"title": "Usable"}],
+                            "abstracts": [{"value": "Usable abstract"}],
+                        }
+                    },
+                ],
+            }
+        }
+
+    results = list(iter_records("test", 1, fetcher, page_size=250))
+
+    assert len(results) == 2
+    assert results[0] is None
+    assert results[1].inspire_id == 2
 
 
 def test_iter_records_stops_when_corpus_is_smaller_than_limit():
@@ -234,9 +261,9 @@ def test_iter_records_warns_and_does_not_cross_result_window(caplog):
         calls.append(page)
         return {"hits": {"total": 20_000, "hits": [{"metadata": {}}]}}
 
-    papers = list(iter_records("test", 10_001, fetcher, page_size=1000))
+    results = list(iter_records("test", 10_001, fetcher, page_size=1000))
 
-    assert papers == []
+    assert results == [None] * 10
     assert calls == list(range(1, 11))
     assert "result window reached" in caplog.text
 

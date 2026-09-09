@@ -159,7 +159,7 @@ class InspireClient:
                 _sleep_for_retry(response, attempt, self.backoff_base)
         raise InspireRequestError(INSPIRE_URL, attempts, last_error) from last_error
 
-    def iter_papers(self, query: str, limit: int) -> Iterator[Paper]:
+    def iter_papers(self, query: str, limit: int) -> Iterator[Paper | None]:
         yield from iter_records(query, limit, self.fetch_page, page_size=self.page_size)
 
 
@@ -172,7 +172,11 @@ def iter_records(
     fetcher: PageFetcher,
     *,
     page_size: int = 250,
-) -> Iterator[Paper]:
+) -> Iterator[Paper | None]:
+    """Yield one result per fetched record: a `Paper`, or `None` for a record with no
+    usable abstract. `limit` counts only the `Paper` results, so a caller receives
+    approximately `limit` papers; it must filter out the `None`s before writing.
+    """
     if limit <= 0:
         return
     page_size = min(max(1, page_size), MAX_PAGE_SIZE)
@@ -192,8 +196,8 @@ def iter_records(
             return
         for hit in records:
             paper = normalize(hit.get("metadata", hit))
+            yield paper
             if paper is not None:
-                yield paper
                 yielded += 1
                 if yielded >= limit:
                     return

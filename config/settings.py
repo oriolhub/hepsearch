@@ -19,6 +19,9 @@ INSPIRE_TIMEOUT_SECONDS = env.float("INSPIRE_TIMEOUT_SECONDS", default=30.0)
 INSPIRE_PAGE_SIZE = env.int("INSPIRE_PAGE_SIZE", default=250)
 INSPIRE_MAX_RETRIES = env.int("INSPIRE_MAX_RETRIES", default=3)
 INSPIRE_BACKOFF_BASE = env.float("INSPIRE_BACKOFF_BASE", default=1.0)
+# One batch is one fetched page by default; a write batch does not have to match the
+# page size, but there is no reason for it to differ unless observed otherwise.
+INGEST_BATCH_SIZE = env.int("INGEST_BATCH_SIZE", default=INSPIRE_PAGE_SIZE)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
