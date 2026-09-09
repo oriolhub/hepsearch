@@ -16,9 +16,11 @@ from django.utils import timezone
 from apps.papers.models import Paper
 
 # Fields ingestion populates and therefore compares. Derived from the model's concrete
-# fields minus identity and bookkeeping columns, so this list cannot drift silently as
-# the model grows.
-_EXCLUDED_FIELDS = {"id", "inspire_id", "created_at", "updated_at"}
+# fields minus identity, bookkeeping and database-generated columns, so this list
+# cannot drift silently as the model grows. `search_vector` is reported as concrete by
+# get_fields() but is a GeneratedField maintained entirely by PostgreSQL: ingestion
+# neither supplies nor owns it, and Django refuses to bulk_update a generated column.
+_EXCLUDED_FIELDS = {"id", "inspire_id", "created_at", "updated_at", "search_vector"}
 COMPARE_FIELDS = tuple(
     f.name
     for f in Paper._meta.get_fields()

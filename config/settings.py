@@ -22,6 +22,11 @@ INSPIRE_BACKOFF_BASE = env.float("INSPIRE_BACKOFF_BASE", default=1.0)
 # One batch is one fetched page by default; a write batch does not have to match the
 # page size, but there is no reason for it to differ unless observed otherwise.
 INGEST_BATCH_SIZE = env.int("INGEST_BATCH_SIZE", default=INSPIRE_PAGE_SIZE)
+# Bounds both the response size and the work the database does per search request.
+SEARCH_RESULT_LIMIT = env.int("SEARCH_RESULT_LIMIT", default=20)
+# Bounds the abstract excerpt returned by the search API; a presentation constant, not
+# a stored value.
+ABSTRACT_SNIPPET_CHARS = env.int("ABSTRACT_SNIPPET_CHARS", default=280)
 
 INSTALLED_APPS = [
     "django.contrib.admin",

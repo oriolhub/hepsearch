@@ -96,6 +96,35 @@ def test_author_summary():
     assert p_long.author_summary() == "Alice Smith, Bob Jones, Carol White et al. (4)"
 
 
+@pytest.mark.django_db
+def test_search_vector_is_populated_without_the_caller_supplying_it():
+    paper = Paper.objects.create(
+        inspire_id=1000020,
+        title="A distinctive searchable title",
+        abstract="A distinctive searchable abstract.",
+    )
+    refetched = Paper.objects.get(pk=paper.pk)
+    assert refetched.search_vector is not None
+
+
+@pytest.mark.django_db
+def test_editing_the_title_updates_the_search_vector():
+    from django.contrib.postgres.search import SearchQuery
+
+    paper = Paper.objects.create(
+        inspire_id=1000021,
+        title="Original title about neutrinos",
+        abstract="An abstract with no matching term.",
+    )
+    assert Paper.objects.filter(pk=paper.pk, search_vector=SearchQuery("neutrinos")).exists()
+
+    paper.title = "A completely different title"
+    paper.save()
+
+    assert not Paper.objects.filter(pk=paper.pk, search_vector=SearchQuery("neutrinos")).exists()
+    assert Paper.objects.filter(pk=paper.pk, search_vector=SearchQuery("completely")).exists()
+
+
 def test_papers_app_has_no_dependant_imports():
     for mod_name, mod in list(sys.modules.items()):
         if mod_name.startswith("apps.papers") and mod:
