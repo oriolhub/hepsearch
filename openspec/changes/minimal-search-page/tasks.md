@@ -65,7 +65,7 @@ demonstrable (AGENTS.md §7).
 - [x] 4.5 `uv run ruff format --check .`
 - [x] 4.6 Measure a real API response before and after, and record both sizes in the
       commit body
-- [ ] 4.7 Commit as `HS-008: Bound the author list in search results`, leaving the card
+- [x] 4.7 Commit as `HS-008: Bound the author list in search results`, leaving the card
       in `board/in-progress/`
 
 ## Commit 2 — `HS-008: Add a minimal search page`
