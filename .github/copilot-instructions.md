@@ -30,6 +30,23 @@ conventions. This file only covers what is specific to working through Copilot.
   `VectorField`. Changing the model is a migration.
 - Keyword search is not throwaway — it is half of the final hybrid ranker.
 - No test may touch the network or download a model in the default `pytest` run.
+- This repo's `commit-msg` hook rejects `Co-authored-by:` trailers (see
+  `.github/git-commit-instructions.md`). Never use `git commit --no-verify` to
+  force one in — omit the trailer instead. Bypassing the hook skips every other
+  check it runs, not just this one.
+- Before checking off a task that claims test coverage (an OpenSpec task or a
+  board card's AC), confirm each named scenario has a literal corresponding
+  test — a passing suite does not mean every claimed scenario is exercised.
+  A prior review found a design-required error path that was unreachable dead
+  code, shipped with the task marked done.
+- Archiving an OpenSpec change is one atomic commit: move the change directory
+  into `archive/`, write the synced spec, stage the deletion of the original
+  change source — all together. Splitting the deletion into a follow-up commit
+  violates the no-commit-fixes-another-commit rule below.
+- Docker here is Rancher Desktop, not Docker Desktop. If `docker compose up`
+  fails with a daemon/API connection error, the Rancher Desktop VM likely isn't
+  running yet — launch it and poll `docker info` until it succeeds (can take
+  ~20s+) before retrying compose.
 
 ## Environment
 
