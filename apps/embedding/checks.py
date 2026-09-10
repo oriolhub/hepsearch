@@ -14,7 +14,7 @@ from django.conf import settings
 from django.core.checks import Error, Warning, register
 
 from apps.embedding import registry
-from apps.embedding.fake import MODEL_NAME as FAKE_MODEL_NAME
+from apps.embedding.fake import FakeEmbeddingProvider
 
 
 @register()
@@ -28,11 +28,11 @@ def check_embedding_dimension(app_configs: Any, **kwargs: Any) -> list[Any]:
     """
     try:
         provider = registry.get_provider()
-    except Exception as exc:
+    except (AttributeError, ImportError, TypeError, ValueError) as exc:
         return [
             Error(
-                f"EMBEDDING_PROVIDER={settings.EMBEDDING_PROVIDER!r} could not be resolved: {exc}",
-                hint="Set EMBEDDING_PROVIDER to an importable provider class.",
+                f"Embedding configuration is invalid: {exc}",
+                hint="Set EMBEDDING_PROVIDER and its provider-specific settings correctly.",
                 id="embedding.E001",
             )
         ]
@@ -56,7 +56,7 @@ def check_embedding_dimension(app_configs: Any, **kwargs: Any) -> list[Any]:
     # Not an error: tests legitimately configure the fake. Silenced under pytest so the
     # suite does not emit a warning nobody can act on — the same "pytest" in sys.modules
     # idiom config/settings.py already uses.
-    if provider.model_name == FAKE_MODEL_NAME and "pytest" not in sys.modules:
+    if isinstance(provider, FakeEmbeddingProvider) and "pytest" not in sys.modules:
         messages.append(
             Warning(
                 "EMBEDDING_PROVIDER is the fake provider. Its vectors are hashed word "

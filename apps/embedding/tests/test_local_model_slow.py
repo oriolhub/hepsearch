@@ -46,20 +46,12 @@ def cosine(a, b):
     return sum(x * y for x, y in zip(a, b, strict=True))
 
 
-def test_the_real_model_honours_the_declared_dimension(provider, settings):
+def test_the_real_model_honours_the_embedding_contract(provider, settings):
     (vector,) = provider.embed(["measurement of the higgs boson self-coupling"])
     assert len(vector) == settings.EMBEDDING_DIMENSION
     assert len(vector) == provider.dimension
     assert math.sqrt(sum(c * c for c in vector)) == pytest.approx(1.0, abs=1e-5)
 
-
-def test_related_physics_sentences_are_closer_than_unrelated_ones(provider):
-    """The whole reason this project embeds anything.
-
-    These sentences share almost no vocabulary, so full-text search would rank the
-    related pair as unrelated. If the model cannot separate them, semantic search has no
-    value over the keyword baseline HS-007 already ships.
-    """
     query, related, unrelated = provider.embed(
         [
             "how do we measure the Higgs self-coupling?",

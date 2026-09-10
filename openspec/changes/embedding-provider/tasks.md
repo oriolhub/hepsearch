@@ -199,14 +199,14 @@ The application must remain working and demonstrable throughout (AGENTS.md §7).
 ## 16. Gates and commit
 
 - [x] 16.1 `uv run pytest` — passes, stays offline, and shows no material slowdown
-- [x] 16.2 `uv run pytest` on a machine state without the extra — confirm collection
-      succeeds and the slow test reports as skipped
+- [x] 16.2 Confirm default collection does not import the optional library; an opted-in
+      slow run without it reports the real-model test as skipped
 - [x] 16.3 `uv run ruff check .`
 - [x] 16.4 `uv run ruff format --check .`
 - [x] 16.5 `uv run python manage.py check` — no errors, and the fake warning appears only
       when the fake is configured outside pytest
 - [x] 16.6 Tick the card's acceptance criteria and Definition of Done
 - [x] 16.7 `git mv` the card from `board/backlog/` to `board/done/` in this commit
-- [ ] 16.8 Commit as `HS-009: Add a pluggable embedding provider`, with a body explaining
+- [x] 16.8 Commit as `HS-009: Add a pluggable embedding provider`, with a body explaining
       why the seam exists before anything stores a vector, and recording the slow-test
       timing from 14.7

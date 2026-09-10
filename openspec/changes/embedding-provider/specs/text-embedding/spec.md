@@ -284,9 +284,9 @@ network request. Consumers of embeddings SHALL be tested against the determinist
 implementation.
 
 Exactly one test SHALL exercise the real implementation, and it SHALL be excluded from the
-default run and opted into explicitly. Because a test is collected before it is
-deselected, that test SHALL be skipped outright when the optional library is absent,
-rather than breaking collection.
+default run and opted into explicitly. It SHALL guard its optional dependency with
+`pytest.importorskip` when it executes, rather than breaking the opted-in run when the
+library is absent. The guard SHALL NOT import the library during default-run collection.
 
 That test SHALL confirm that the real model produces vectors of the declared width, and
 that two semantically related sentences score higher against each other than either does
@@ -307,7 +307,7 @@ against an unrelated one.
 - **AND** two related sentences score higher against each other than against an unrelated
   one
 
-#### Scenario: Collection survives a missing library
-- **WHEN** the test suite is collected on a machine without the optional library
-- **THEN** collection succeeds
-- **AND** the real-model test is reported as skipped rather than failing
+#### Scenario: An opted-in run survives a missing library
+- **WHEN** the slow tests are run on a machine without the optional library
+- **THEN** the real-model test is reported as skipped rather than failing
+- **AND** default-run collection does not import the optional library

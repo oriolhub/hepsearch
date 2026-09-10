@@ -81,6 +81,7 @@ def test_dimension_follows_the_configured_contract(provider, settings):
     vector = provider.embed(["higgs boson"])[0]
     assert len(vector) == 16
     assert math.sqrt(sum(c * c for c in vector)) == pytest.approx(1.0)
+    assert provider.model_name == "fake-bow-16"
 
 
 def test_embedding_loads_no_embedding_library(provider):

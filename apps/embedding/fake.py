@@ -10,8 +10,9 @@ plumbing. HS-011's "the nearest vector ranks first" and HS-012's rank fusion are
 meaningful if related texts genuinely land near each other, which a random-hash fake
 could not deliver.
 
-`manage.py check` warns whenever this provider is configured outside the test suite,
-and `model_name` is `fake-bow-384` so a wrong run is self-evident in the database.
+`manage.py check` warns whenever this provider is configured outside the test suite.
+Its `model_name` includes its active dimension, so incompatible fake vector spaces
+cannot be mistaken for one another in the database.
 """
 
 from __future__ import annotations
@@ -24,8 +25,6 @@ from collections.abc import Sequence
 from django.conf import settings
 
 from apps.embedding.protocol import validate_texts
-
-MODEL_NAME = "fake-bow-384"
 
 _TOKEN = re.compile(r"[a-z0-9]+")
 
@@ -54,7 +53,7 @@ class FakeEmbeddingProvider:
 
     @property
     def model_name(self) -> str:
-        return MODEL_NAME
+        return f"fake-bow-{self.dimension}"
 
     def embed(self, texts: Sequence[str]) -> list[list[float]]:
         if not texts:

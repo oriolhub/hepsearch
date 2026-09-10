@@ -11,7 +11,9 @@ library, and the tests assert as much.
 """
 
 import sys
+import time
 import types
+from concurrent.futures import ThreadPoolExecutor
 from unittest import mock
 
 import pytest
@@ -98,6 +100,19 @@ class TestDeferredLoading:
             provider.embed(["top quark"])
             provider.embed(["neutrino"])
         assert loads == [settings.EMBEDDING_MODEL]
+
+    def test_concurrent_first_calls_load_the_model_once(self, settings):
+        class Model:
+            def encode(self, texts, **kwargs):
+                return [[0.0] * settings.EMBEDDING_DIMENSION] * len(texts)
+
+        provider = LocalEmbeddingProvider()
+        with mock.patch.object(
+            provider, "_build_model", side_effect=lambda: time.sleep(0.05) or Model()
+        ) as build:
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                list(executor.map(provider.embed, [["higgs"], ["boson"]]))
+        build.assert_called_once()
 
 
 class TestLoadedDimensionAssertion:
