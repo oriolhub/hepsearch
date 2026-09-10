@@ -126,18 +126,44 @@ not an error.
 
 ### Requirement: Each result carries what a reader needs to judge it
 
-Every result SHALL carry the paper's identifier, its title, its authors, its
-publication date, an excerpt of its abstract, and a link to the paper's record on
-INSPIRE. The link SHALL be derived from the paper's INSPIRE identifier rather than
-stored separately.
+Every result SHALL carry the paper's identifier, its title, a bounded sample of its
+authors, the total number of authors, its publication date, an excerpt of its abstract,
+and a link to the paper's record on INSPIRE. The link SHALL be derived from the paper's
+INSPIRE identifier rather than stored separately.
+
+The author list SHALL be bounded to a small leading sample rather than reproducing every
+author, because collaboration papers routinely carry thousands of author names. The
+total SHALL be reported alongside the sample. The size of a response SHALL therefore be
+bounded by the result cap and author sample, and SHALL NOT depend on the number of
+authors in matched papers.
 
 The excerpt SHALL be bounded in length and SHALL indicate when it has been cut short,
 so that a caller can tell an abbreviated abstract from a complete one.
 
 #### Scenario: A result carries the expected fields
 - **WHEN** a search returns a paper
-- **THEN** the result carries its identifier, title, authors, publication date,
-  abstract excerpt and INSPIRE link
+- **THEN** the result carries its identifier, title, author sample, author total,
+  publication date, abstract excerpt and INSPIRE link
+
+#### Scenario: A collaboration paper's authors are sampled, not reproduced
+- **WHEN** a returned paper has thousands of authors
+- **THEN** the result carries only the leading sample of them
+- **AND** the reported author total is the paper's true number of authors
+
+#### Scenario: A short author list is carried whole
+- **WHEN** a returned paper has fewer authors than the sample bound
+- **THEN** the result carries all of them
+- **AND** the reported author total equals that number
+
+#### Scenario: A paper with no authors reports none
+- **WHEN** a returned paper has no authors
+- **THEN** the result carries an empty author list
+- **AND** the reported author total is zero
+
+#### Scenario: Response size does not depend on author counts
+- **WHEN** one query matches papers with thousands of authors and another matches papers
+  with a handful
+- **THEN** neither response is materially larger than the other on account of authors
 
 #### Scenario: The INSPIRE link addresses the paper's record
 - **WHEN** a result's link is inspected
