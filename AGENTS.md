@@ -69,6 +69,7 @@ which acceptance criterion currently fails without it.
 config/                 Django project: settings, urls, wsgi/asgi
 apps/
   papers/               Domain: the Paper model, admin, migrations
+  embedding/            The embedding seam: provider interface, local model, test double
   ingestion/            INSPIRE client + management commands that fill the corpus
   search/               Query parsing, ranking, DRF views/serializers, templates
 board/                  The local task board (see §7)
@@ -77,16 +78,24 @@ board/                  The local task board (see §7)
 ### Dependency rule
 
 ```
-search  ──▶ papers
-ingestion ──▶ papers
+search  ──▶ papers            ingestion ──▶ papers
+search  ──▶ embedding         ingestion ──▶ embedding
 search  ──✗  ingestion        (never)
 papers  ──✗  anything          (the domain depends on nothing)
+embedding ──✗ any app          (it takes text and returns floats)
 ```
 
-`apps/papers` is the centre. It knows nothing about INSPIRE, HTTP, or embeddings.
-`apps/ingestion` may import `papers` models; `apps/search` may import `papers`
-models. **`search` and `ingestion` must never import each other.** If they need
-to share something, it belongs in `papers`.
+`apps/papers` is the centre. It knows nothing about INSPIRE, HTTP, or which model
+produced a vector — it stores one, and the embedding dimension is fixed by
+`settings.EMBEDDING_DIMENSION`. `apps/ingestion` may import `papers` models;
+`apps/search` may import `papers` models. **`search` and `ingestion` must never
+import each other.** If they need to share something, it belongs in `papers` —
+unless it is embedding, which is why `apps/embedding` exists: both sides need to
+turn text into vectors, and neither may reach through the other to do it.
+
+`apps/embedding` has no models, no views and no migrations. It is a Django app
+anyway because Django only auto-discovers system checks from installed apps, and
+the dimension contract is enforced by one.
 
 ### The three layers that matter
 
@@ -191,6 +200,7 @@ docker compose down -v
 
 # Dependencies
 uv sync                          # install from the lockfile
+uv sync --extra local-embeddings # ...plus sentence-transformers (~2 GB with torch)
 uv add <package>                 # add a dependency (never edit pyproject by hand)
 
 # Django
@@ -208,6 +218,7 @@ uv run pytest apps/search                       # one app
 uv run pytest apps/search/tests/test_ranking.py # one file
 uv run pytest apps/search/tests/test_ranking.py::test_rrf_prefers_dual_hits   # ONE test
 uv run pytest -k "rrf and not slow"             # by expression
+uv run pytest -m slow                           # the excluded slow tests; needs the extra
 uv run pytest -x -q --lf                        # stop at first failure, rerun last failures
 
 # Lint & format
@@ -233,6 +244,17 @@ re-running is cheap and resumable after an interrupt.
 - One vector per paper, over `title + "\n" + abstract`.
 - Default model `all-MiniLM-L6-v2`, **384 dimensions** — the `VectorField` dim
   and the model must not drift apart. Changing models is a migration.
+- Every provider returns **L2-normalized** vectors, unconditionally. That is a
+  property of the interface, not of one implementation, so stored vectors stay
+  comparable and an index may use either the cosine or the inner-product
+  operator class.
+- The provider is selected by `EMBEDDING_PROVIDER` (a dotted path) and reached
+  through `apps.embedding.registry.get_provider()`. Never import a provider
+  class directly, and never import `sentence_transformers` outside
+  `apps/embedding/local.py`.
+- `apps.embedding.fake.FakeEmbeddingProvider` exists so the whole suite runs
+  offline. It is hashed word counts, not meaning — `manage.py check` warns
+  whenever it is configured outside the test suite.
 - No chunking. Abstracts are ~1,200 characters, comfortably inside the model's
   512-token window. Chunking is for full texts we do not have.
 

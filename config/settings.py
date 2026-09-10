@@ -28,6 +28,19 @@ SEARCH_AUTHOR_SAMPLE_SIZE = env.int("SEARCH_AUTHOR_SAMPLE_SIZE", default=5)
 # Bounds the abstract excerpt returned by the search API; a presentation constant, not
 # a stored value.
 ABSTRACT_SNIPPET_CHARS = env.int("ABSTRACT_SNIPPET_CHARS", default=280)
+# The embedding layer is selected by import path so that swapping the local model for a
+# hosted API touches one implementation module and no caller (AGENTS.md §3). The default
+# is deliberately the REAL provider: defaulting to the fake would let an operator who
+# never touched this setting fill a corpus with meaningless vectors in silence.
+EMBEDDING_PROVIDER = env(
+    "EMBEDDING_PROVIDER", default="apps.embedding.local.LocalEmbeddingProvider"
+)
+EMBEDDING_MODEL = env("EMBEDDING_MODEL", default="all-MiniLM-L6-v2")
+# The schema contract. HS-010 builds its VectorField and ANN index from this number, and
+# a system check fails when it disagrees with the configured provider's declared
+# dimension. Once HS-010 runs makemigrations the migration becomes the real contract:
+# changing this afterwards does not alter the column (AGENTS.md §6).
+EMBEDDING_DIMENSION = env.int("EMBEDDING_DIMENSION", default=384)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -40,6 +53,7 @@ INSTALLED_APPS = [
     "apps.papers.apps.PapersConfig",
     "apps.ingestion.apps.IngestionConfig",
     "apps.search.apps.SearchConfig",
+    "apps.embedding.apps.EmbeddingConfig",
 ]
 
 MIDDLEWARE = [

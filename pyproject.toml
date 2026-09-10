@@ -11,6 +11,17 @@ dependencies = [
     "psycopg[binary]>=3.3.5",
 ]
 
+# sentence-transformers pulls torch: hundreds of megabytes to low gigabytes, for a
+# default test suite that never touches it (AGENTS.md §6: no test may download a model
+# in the default run). It is therefore opt-in, and apps/embedding/local.py imports it
+# inside a method so every other command still works without it:
+#
+#     uv sync --extra local-embeddings
+[project.optional-dependencies]
+local-embeddings = [
+    "sentence-transformers>=3.0",
+]
+
 # This is a Django application, not a distributable library: the source lives
 # in apps/ and config/, not in an importable top-level "hepsearch" package.
 # package = false tells uv not to try to build/install a distribution for it.
@@ -56,3 +67,11 @@ pythonpath = ["."]
 # holds per-app tests once apps/ exists (from HS-004 onward).
 testpaths = ["tests", "apps"]
 DJANGO_SETTINGS_MODULE = "config.settings"
+markers = [
+    "slow: requires a downloaded embedding model; excluded from the default run",
+]
+# The default run must stay fast and offline (AGENTS.md §6), so `slow` is deselected
+# here rather than left to discipline. A command-line `-m` replaces this expression,
+# so `uv run pytest -m slow` is the single-flag opt-in. --strict-markers turns a
+# mistyped marker into an error instead of a silently-ignored decorator.
+addopts = "-m 'not slow' --strict-markers"
