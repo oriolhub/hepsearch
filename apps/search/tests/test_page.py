@@ -89,7 +89,9 @@ def test_search_page_summarises_authors_and_omits_empty_author_lines(client):
     assert "Author 5, Given" not in body
     no_author_start = body.index(no_authors.title)
     no_author_end = body.index("</article>", no_author_start)
-    assert "authors" not in body[no_author_start:no_author_end]
+    no_author_fragment = body[no_author_start:no_author_end]
+    assert "Author 0, Given" not in no_author_fragment
+    assert no_authors.abstract in no_author_fragment
 
 
 @pytest.mark.django_db

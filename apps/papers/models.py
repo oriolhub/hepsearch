@@ -91,7 +91,7 @@ class Paper(models.Model):
                 year, month = (int(part) for part in parts)
                 date = datetime.date(year, month, 1)
                 return f"{date:%B} {year}"
-            if len(parts) == 3 and all(len(part) == 2 for part in parts[1:]):
+            if len(parts) == 3 and len(parts[0]) == 4 and all(len(part) == 2 for part in parts[1:]):
                 year, month, day = (int(part) for part in parts)
                 date = datetime.date(year, month, day)
                 return f"{date.day} {date:%B} {date.year}"

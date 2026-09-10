@@ -7,6 +7,7 @@ def excerpt_abstract(abstract: str, max_chars: int) -> str:
         return abstract
     cut = abstract[:max_chars]
     last_space = cut.rfind(" ")
-    if last_space > 0:
-        cut = cut[:last_space]
+    if last_space <= 0:
+        return "\u2026"
+    cut = cut[:last_space]
     return f"{cut.rstrip()}\u2026"

@@ -24,6 +24,10 @@ def complete_date(value: str) -> datetime.date | None:
     if not value:
         return None
     parts = value.split("-")
+    if len(parts) not in (1, 2, 3) or len(parts[0]) != 4:
+        return None
+    if any(len(part) != 2 for part in parts[1:]):
+        return None
     try:
         year = int(parts[0])
         month = int(parts[1]) if len(parts) > 1 else 1

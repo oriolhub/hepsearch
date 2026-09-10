@@ -84,6 +84,8 @@ def test_serializer_returns_all_short_author_lists_and_zero_for_empty():
         ("2020-05", datetime.date(2020, 5, 1)),
         ("2020", datetime.date(2020, 1, 1)),
         ("", None),
+        ("20-01-01", None),
+        ("2020-1", None),
     ],
 )
 def test_complete_date(stored, expected):

@@ -123,6 +123,7 @@ def test_display_authors_is_empty_without_authors():
         ("2014", "2014"),
         ("", ""),
         ("not-a-date", ""),
+        ("20-01-01", ""),
     ],
 )
 def test_display_date_preserves_stored_precision(stored, expected):
@@ -137,6 +138,12 @@ def test_abstract_snippet_uses_the_shared_excerpt_rule():
 
     assert paper.abstract_snippet.endswith("\u2026")
     assert not paper.abstract_snippet[:-1].endswith(" ")
+
+
+def test_abstract_snippet_does_not_split_a_single_long_word():
+    paper = Paper(abstract="x" * 300)
+
+    assert paper.abstract_snippet == "\u2026"
 
 
 @pytest.mark.django_db
