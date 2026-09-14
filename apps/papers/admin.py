@@ -13,4 +13,4 @@ class PaperAdmin(admin.ModelAdmin):
         "citation_count",
     )
     search_fields = ("title", "abstract", "inspire_id")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "updated_at", "embedding", "embedding_model", "embedded_at")

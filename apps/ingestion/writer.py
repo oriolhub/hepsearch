@@ -20,7 +20,16 @@ from apps.papers.models import Paper
 # cannot drift silently as the model grows. `search_vector` is reported as concrete by
 # get_fields() but is a GeneratedField maintained entirely by PostgreSQL: ingestion
 # neither supplies nor owns it, and Django refuses to bulk_update a generated column.
-_EXCLUDED_FIELDS = {"id", "inspire_id", "created_at", "updated_at", "search_vector"}
+_EXCLUDED_FIELDS = {
+    "id",
+    "inspire_id",
+    "created_at",
+    "updated_at",
+    "search_vector",
+    "embedding",
+    "embedding_model",
+    "embedded_at",
+}
 COMPARE_FIELDS = tuple(
     f.name
     for f in Paper._meta.get_fields()
@@ -48,12 +57,19 @@ def diff_batch(incoming: list[Paper], existing_by_inspire_id: dict[int, Paper]) 
             result.created.append(paper)
             continue
         changed = False
+        source_text_changed = False
         for field_name in COMPARE_FIELDS:
             new_value = getattr(paper, field_name)
             if getattr(existing, field_name) != new_value:
+                if field_name in {"title", "abstract"}:
+                    source_text_changed = True
                 setattr(existing, field_name, new_value)
                 changed = True
         if changed:
+            if source_text_changed:
+                existing.embedding = None
+                existing.embedding_model = ""
+                existing.embedded_at = None
             existing.updated_at = timezone.now()
             result.updated.append(existing)
         else:
@@ -75,4 +91,7 @@ def apply_batch(result: BatchResult) -> None:
         if result.created:
             Paper.objects.bulk_create(result.created)
         if result.updated:
-            Paper.objects.bulk_update(result.updated, [*COMPARE_FIELDS, "updated_at"])
+            Paper.objects.bulk_update(
+                result.updated,
+                [*COMPARE_FIELDS, "embedding", "embedding_model", "embedded_at", "updated_at"],
+            )

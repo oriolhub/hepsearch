@@ -210,7 +210,9 @@ uv run python manage.py createsuperuser
 
 # Fill the corpus
 uv run python manage.py ingest_inspire --query "higgs boson" --limit 5000
-uv run python manage.py embed_papers            # only embeds rows missing a vector
+uv run python manage.py embed_papers            # embeds missing or stale vectors
+uv run python manage.py embed_papers --noinput  # unattended model-change recompute
+uv run python manage.py embed_papers --force    # recompute even when the model matches
 
 # Tests
 uv run pytest                                   # whole suite
@@ -237,11 +239,15 @@ uv run ruff format --check .                    # CI/DoD gate: fails if formatti
 `ingest_inspire` is re-run constantly during development. It upserts on
 `inspire_id` (`control_number`). Running it twice must not duplicate a row.
 Same for `embed_papers`: it only processes papers whose embedding is null, so
-re-running is cheap and resumable after an interrupt.
+re-running is cheap and resumable after an interrupt. A model change is detected
+from `embedding_model` and triggers a reported, confirmable recompute. `--force`
+is reserved for recomputing vectors whose recorded model already matches.
 
 ### Embeddings
 
 - One vector per paper, over `title + "\n" + abstract`.
+- Embedding generation is not considered a paper-content change: it updates
+  `embedded_at`, not `updated_at`.
 - Default model `all-MiniLM-L6-v2`, **384 dimensions** — the `VectorField` dim
   and the model must not drift apart. Changing models is a migration.
 - Every provider returns **L2-normalized** vectors, unconditionally. That is a
@@ -257,6 +263,9 @@ re-running is cheap and resumable after an interrupt.
   whenever it is configured outside the test suite.
 - No chunking. Abstracts are ~1,200 characters, comfortably inside the model's
   512-token window. Chunking is for full texts we do not have.
+- The `vector` extension migration requires a PostgreSQL superuser. In a
+  least-privilege deployment, a DBA must install the extension out of band
+  before applying the migrations.
 
 ### Tests
 

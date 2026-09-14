@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from apps.ingestion.writer import COMPARE_FIELDS, BatchResult, diff_batch
 from apps.papers.models import Paper
 
@@ -100,7 +102,7 @@ def test_compare_fields_excludes_identity_and_bookkeeping_columns():
 
 
 def test_compare_fields_includes_the_fields_ingestion_populates():
-    for name in (
+    assert set(COMPARE_FIELDS) == {
         "title",
         "abstract",
         "authors",
@@ -110,8 +112,46 @@ def test_compare_fields_includes_the_fields_ingestion_populates():
         "journal",
         "earliest_date",
         "citation_count",
-    ):
-        assert name in COMPARE_FIELDS
+    }
+
+
+def test_embedding_fields_are_not_ingestion_owned():
+    assert {"embedding", "embedding_model", "embedded_at"}.isdisjoint(COMPARE_FIELDS)
+
+
+def test_changing_source_text_invalidates_embedding():
+    stored = make_paper(
+        1,
+        embedding=[1.0, 0.0],
+        embedding_model="fake-bow-2",
+        embedded_at=timezone.now(),
+    )
+    incoming = [make_paper(1, abstract="A revised abstract")]
+
+    result = diff_batch(incoming, existing_by_inspire_id={1: stored})
+
+    assert result.updated == [stored]
+    assert stored.embedding is None
+    assert stored.embedding_model == ""
+    assert stored.embedded_at is None
+
+
+def test_changing_non_source_text_preserves_embedding():
+    embedded_at = timezone.now()
+    stored = make_paper(
+        1,
+        embedding=[1.0, 0.0],
+        embedding_model="fake-bow-2",
+        embedded_at=embedded_at,
+    )
+    incoming = [make_paper(1, citation_count=42)]
+
+    result = diff_batch(incoming, existing_by_inspire_id={1: stored})
+
+    assert result.updated == [stored]
+    assert stored.embedding == [1.0, 0.0]
+    assert stored.embedding_model == "fake-bow-2"
+    assert stored.embedded_at == embedded_at
 
 
 def test_batch_result_defaults_are_independent_between_instances():

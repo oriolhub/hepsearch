@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
+from pgvector.django import HnswIndex, VectorField
 
 from .presentation import excerpt_abstract
 
@@ -28,6 +29,13 @@ class Paper(models.Model):
     journal = models.CharField(max_length=256, blank=True, default="")
     earliest_date = models.CharField(max_length=10, blank=True, default="")
     citation_count = models.IntegerField(null=True, blank=True)
+    embedding = VectorField(
+        dimensions=settings.EMBEDDING_DIMENSION,
+        null=True,
+        blank=True,
+    )
+    embedding_model = models.CharField(max_length=128, blank=True, default="")
+    embedded_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # Database-maintained full-text search vector over title (weight A) and abstract
@@ -55,10 +63,19 @@ class Paper(models.Model):
         ]
         indexes: ClassVar[list[models.Index]] = [
             GinIndex(fields=["search_vector"], name="paper_search_vector_gin"),
+            HnswIndex(
+                fields=["embedding"],
+                name="paper_embedding_hnsw",
+                opclasses=["vector_cosine_ops"],
+            ),
         ]
 
     def __str__(self) -> str:
         return f"{self.inspire_id}: {self.title[:80]}"
+
+    @property
+    def embedding_text(self) -> str:
+        return f"{self.title}\n{self.abstract}"
 
     @property
     def inspire_url(self) -> str:

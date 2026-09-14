@@ -23,6 +23,9 @@ def test_minimal_paper_creation():
     assert paper.citation_count is None
     assert paper.authors == []
     assert paper.categories == []
+    assert paper.embedding is None
+    assert paper.embedding_model == ""
+    assert paper.embedded_at is None
 
 
 @pytest.mark.django_db
@@ -80,6 +83,31 @@ def test_thousands_of_authors_stored_in_order():
 def test_inspire_url_derivation():
     paper = Paper(inspire_id=1234567, title="Title", abstract="Abstract")
     assert paper.inspire_url == "https://inspirehep.net/literature/1234567"
+
+
+def test_embedding_text_combines_title_and_abstract():
+    paper = Paper(title="A title", abstract="An abstract")
+
+    assert paper.embedding_text == "A title\nAn abstract"
+
+
+@pytest.mark.django_db
+def test_embedding_column_matches_configured_dimension():
+    from django.conf import settings
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT atttypmod
+            FROM pg_attribute
+            WHERE attrelid = %s::regclass AND attname = %s AND NOT attisdropped
+            """,
+            [Paper._meta.db_table, "embedding"],
+        )
+        (column_dimension,) = cursor.fetchone()
+
+    assert column_dimension == settings.EMBEDDING_DIMENSION
 
 
 def test_author_summary():

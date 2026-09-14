@@ -142,6 +142,31 @@ def test_created_at_survives_an_update(patch_client):
 
 
 @pytest.mark.django_db
+def test_reingest_preserves_embedding_and_source_change_invalidates_it(patch_client):
+    patch_client(FakeClient([make_paper(1)]))
+    run_command(limit=1)
+    paper = Paper.objects.get(inspire_id=1)
+    paper.embedding = [0.0] * 384
+    paper.embedding_model = "fake-bow-384"
+    paper.embedded_at = paper.created_at
+    paper.save(update_fields=["embedding", "embedding_model", "embedded_at"])
+
+    patch_client(FakeClient([make_paper(1)]))
+    run_command(limit=1)
+    paper.refresh_from_db()
+    assert paper.embedding == [0.0] * 384
+    assert paper.embedding_model == "fake-bow-384"
+    assert paper.embedded_at == paper.created_at
+
+    patch_client(FakeClient([make_paper(1, abstract="A revised abstract")]))
+    run_command(limit=1)
+    paper.refresh_from_db()
+    assert paper.embedding is None
+    assert paper.embedding_model == ""
+    assert paper.embedded_at is None
+
+
+@pytest.mark.django_db
 def test_dry_run_stores_and_modifies_nothing(patch_client):
     patch_client(FakeClient([make_paper(1)]))
     run_command(limit=1)
@@ -218,3 +243,13 @@ def test_ingestion_command_does_not_import_search():
                 assert not alias.name.startswith("apps.search")
         elif isinstance(node, ast.ImportFrom) and node.module:
             assert not node.module.startswith("apps.search")
+
+
+def test_ingestion_writer_does_not_import_embedding():
+    writer_path = Path(__file__).parents[1] / "writer.py"
+    tree = ast.parse(writer_path.read_text(encoding="utf-8"), filename=str(writer_path))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            assert all(not alias.name.startswith("apps.embedding") for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            assert not node.module.startswith("apps.embedding")

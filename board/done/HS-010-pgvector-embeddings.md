@@ -1,6 +1,6 @@
 # HS-010: Store paper embeddings in pgvector
 
-**Status:** backlog
+**Status:** done
 **Depends on:** HS-009
 
 ## Story
@@ -42,29 +42,39 @@ takes minutes, and nobody should have to start over after a Ctrl+C.
       `settings.EMBEDDING_DIMENSION`, the schema contract HS-009 established
 - [ ] `embedding_model` and `embedded_at` are stored per paper, so a model change
       is detectable
-- [ ] `uv run python manage.py embed_papers` embeds every paper missing a vector
+- [ ] `uv run python manage.py embed_papers` embeds every paper missing a vector or
+      produced by a different model, and reports missing/stale counts
 - [ ] Before modifying any paper rows, `embed_papers` resolves and validates the
       configured embedding provider. If the provider configuration or its required
       dependencies are invalid, the command exits without partially embedding the
-      batch
+      batch. It also fails when the provider dimension disagrees with the setting
+      or the setting disagrees with the migrated column width.
 - [ ] Re-running the command immediately after does nothing and says so
 - [ ] Interrupting mid-run and re-running resumes; already-embedded papers are
       not recomputed
 - [ ] Papers are embedded in batches, and the batch size is configurable
 - [ ] Progress and a final summary are printed
-- [ ] `--force` re-embeds everything, for use after a model change
+- [ ] A model change is announced and requires interactive confirmation; `--noinput`
+      permits unattended recomputation
+- [ ] `--force` recomputes even when `embedding_model` already matches
 - [ ] An ANN index (HNSW or IVFFlat) exists for the cosine operator class, added
       by a committed migration
-- [ ] The index choice and its parameters are justified in a comment
+- [ ] HNSW is selected because migrations run on empty databases and IVFFlat needs
+      training data; cosine is selected because HS-009 guarantees normalized vectors
 - [ ] Tests use the fake provider from HS-009 and assert: vectors are stored,
       re-running is a no-op, and `--force` recomputes
+- [ ] `Paper.embedding_text` defines `title + "\n" + abstract`
+- [ ] Ingestion excludes embedding fields and clears them when title or abstract
+      changes, so the next embedding run self-heals the vector
+- [ ] Embedding generation does not change `updated_at`; it is not a paper-content
+      change
 - [ ] After a real run, no paper in the corpus has a null embedding
 
 ## Definition of done
 
 - [ ] Acceptance criteria met
-- [ ] A real embedding run has been performed; the count and elapsed time are
-      recorded in the commit body
+- [ ] A fresh-volume migration has exercised `CreateExtension`, and a real embedding
+      run has been performed; count and elapsed time are recorded in the commit body
 - [ ] `uv run pytest`, `uv run ruff check .` and `uv run ruff format --check .` pass
 - [ ] Committed as `HS-010: Store paper embeddings in pgvector`
 
