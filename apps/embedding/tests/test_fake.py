@@ -25,9 +25,14 @@ def provider():
     return FakeEmbeddingProvider()
 
 
-def test_model_name_identifies_the_vector_space(provider):
+def test_model_name_identifies_the_vector_space(provider, settings):
     # Not a display label: HS-010 stores it beside each vector and HS-011 refuses to
     # compare across spaces, so a fake-populated corpus is self-evident.
+    #
+    # The width is pinned because the name tracks the configured dimension: reading it
+    # from the ambient environment made this fail for anyone whose .env set another
+    # width, which is not what this test is about.
+    settings.EMBEDDING_DIMENSION = 384
     assert provider.model_name == "fake-bow-384"
 
 

@@ -1,8 +1,12 @@
 """How a provider is chosen, cached, and validated before anything expensive happens."""
 
+import importlib.util
+import os
 import sys
+from pathlib import Path
 from unittest import mock
 
+import environ
 import pytest
 from django.core.checks import Error, Warning
 
@@ -15,11 +19,35 @@ FAKE_PATH = "apps.embedding.fake.FakeEmbeddingProvider"
 LOCAL_PATH = "apps.embedding.local.LocalEmbeddingProvider"
 
 
+def shipped_settings(base_dir):
+    """Load config/settings.py with the environment and the .env file suppressed.
+
+    The "what is the default" scenario is about the literal baked into settings.py, not
+    about whatever a contributor has configured locally. Executing the module through a
+    throwaway spec keeps it out of sys.modules, so nothing global is disturbed.
+    """
+    spec = importlib.util.spec_from_file_location(
+        "config._shipped_settings_probe", Path(base_dir) / "config" / "settings.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    with (
+        mock.patch.dict(os.environ, {"SECRET_KEY": "probe-only"}, clear=True),
+        mock.patch.object(environ.Env, "read_env", lambda *args, **kwargs: None),
+    ):
+        spec.loader.exec_module(module)
+    return module
+
+
 class TestResolution:
     def test_the_default_is_the_real_provider(self, settings):
         # A fake default would let a corpus fill with meaningless vectors just because
-        # nobody set the variable.
-        assert settings.EMBEDDING_PROVIDER == LOCAL_PATH
+        # nobody set the variable. Read from the shipped settings rather than the
+        # resolved ones: a local .env may legitimately point this elsewhere.
+        assert shipped_settings(settings.BASE_DIR).EMBEDDING_PROVIDER == LOCAL_PATH
+
+    def test_the_configured_provider_is_constructed(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
+        registry.reset()
         assert isinstance(registry.get_provider(), LocalEmbeddingProvider)
 
     def test_the_setting_selects_the_provider(self, settings):
@@ -37,15 +65,21 @@ class TestResolution:
 
 
 class TestCaching:
-    def test_the_same_instance_is_returned(self):
+    def test_the_same_instance_is_returned(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
+        registry.reset()
         assert registry.get_provider() is registry.get_provider()
 
-    def test_reset_constructs_a_fresh_instance(self):
+    def test_reset_constructs_a_fresh_instance(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
+        registry.reset()
         first = registry.get_provider()
         registry.reset()
         assert registry.get_provider() is not first
 
     def test_reset_picks_up_a_changed_setting(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
+        registry.reset()
         assert isinstance(registry.get_provider(), LocalEmbeddingProvider)
         settings.EMBEDDING_PROVIDER = FAKE_PATH
         registry.reset()
@@ -54,12 +88,14 @@ class TestCaching:
 
 class TestDimensionCheck:
     def test_matching_dimensions_report_nothing(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
         settings.EMBEDDING_DIMENSION = 384
         settings.EMBEDDING_MODEL = "all-MiniLM-L6-v2"
         registry.reset()
         assert check_embedding_dimension(None) == []
 
     def test_a_mismatch_names_both_values(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
         settings.EMBEDDING_DIMENSION = 768
         settings.EMBEDDING_MODEL = "all-MiniLM-L6-v2"
         registry.reset()
@@ -78,6 +114,9 @@ class TestDimensionCheck:
         assert message.id == "embedding.E001"
 
     def test_the_check_never_loads_a_model(self, settings):
+        settings.EMBEDDING_PROVIDER = LOCAL_PATH
+        settings.EMBEDDING_DIMENSION = 384
+        settings.EMBEDDING_MODEL = "all-MiniLM-L6-v2"
         with mock.patch.dict(sys.modules, {"sentence_transformers": None}):
             registry.reset()
             assert check_embedding_dimension(None) == []

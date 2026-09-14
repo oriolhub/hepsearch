@@ -24,7 +24,12 @@ PROVIDERS = {
 
 
 @pytest.fixture(params=sorted(PROVIDERS), ids=sorted(PROVIDERS))
-def provider(request):
+def provider(request, settings):
+    # Pinned rather than inherited from the environment. These cases describe the
+    # interface, so a contributor whose .env names another model or width must not turn
+    # the shared contract red for reasons unrelated to the property being asserted.
+    settings.EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+    settings.EMBEDDING_DIMENSION = 384
     return PROVIDERS[request.param]()
 
 
