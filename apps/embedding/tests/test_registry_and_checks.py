@@ -9,6 +9,7 @@ from unittest import mock
 import environ
 import pytest
 from django.core.checks import Error, Warning
+from django.core.exceptions import ImproperlyConfigured
 
 from apps.embedding import registry
 from apps.embedding.checks import check_embedding_dimension
@@ -36,6 +37,16 @@ def shipped_settings(base_dir):
     ):
         spec.loader.exec_module(module)
     return module
+
+
+class RaisingProvider:
+    """Stands in for a hosted provider whose credentials are missing."""
+
+    def __init__(self):
+        raise ImproperlyConfigured("EMBEDDING_API_KEY is not set")
+
+
+RAISING_PATH = f"{__name__}.RaisingProvider"
 
 
 class TestResolution:
@@ -104,6 +115,26 @@ class TestDimensionCheck:
         assert message.id == "embedding.E002"
         assert "768" in message.msg
         assert "384" in message.msg
+
+    def test_a_non_positive_dimension_is_reported(self, settings):
+        # Zero would slip past the equality comparison whenever the provider follows the
+        # setting, then fail with a modulo-by-zero deep inside an ingestion run.
+        settings.EMBEDDING_PROVIDER = FAKE_PATH
+        settings.EMBEDDING_DIMENSION = 0
+        registry.reset()
+        (message,) = check_embedding_dimension(None)
+        assert isinstance(message, Error)
+        assert message.id == "embedding.E003"
+
+    def test_a_provider_that_cannot_configure_itself_is_an_error(self, settings):
+        # A hosted provider missing its API key raises ImproperlyConfigured, and
+        # `manage.py check` must report that rather than dying on it.
+        settings.EMBEDDING_PROVIDER = RAISING_PATH
+        registry.reset()
+        (message,) = check_embedding_dimension(None)
+        assert isinstance(message, Error)
+        assert message.id == "embedding.E001"
+        assert "EMBEDDING_API_KEY" in message.msg
 
     def test_an_unresolvable_provider_is_an_error_not_a_crash(self, settings):
         # `manage.py check` exists to report misconfiguration, so it must survive it.

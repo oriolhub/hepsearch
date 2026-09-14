@@ -12,12 +12,13 @@ from typing import Any
 
 from django.conf import settings
 from django.core.checks import Error, Warning, register
+from django.core.exceptions import ImproperlyConfigured
 
 from apps.embedding import registry
 from apps.embedding.fake import FakeEmbeddingProvider
 
 
-@register()
+@register("embedding")
 def check_embedding_dimension(app_configs: Any, **kwargs: Any) -> list[Any]:
     """Verify the configured dimension matches the configured provider.
 
@@ -28,7 +29,15 @@ def check_embedding_dimension(app_configs: Any, **kwargs: Any) -> list[Any]:
     """
     try:
         provider = registry.get_provider()
-    except (AttributeError, ImportError, TypeError, ValueError) as exc:
+    except (
+        AttributeError,
+        ImportError,
+        ImproperlyConfigured,
+        TypeError,
+        ValueError,
+    ) as exc:
+        # ImproperlyConfigured is what a hosted provider reading a missing API key
+        # would raise from __init__, and this seam exists to make that provider cheap.
         return [
             Error(
                 f"Embedding configuration is invalid: {exc}",
@@ -38,6 +47,19 @@ def check_embedding_dimension(app_configs: Any, **kwargs: Any) -> list[Any]:
         ]
 
     messages: list[Any] = []
+
+    # A non-positive width passes the equality check below whenever the provider simply
+    # follows the setting (the fake does), and then fails far away with a modulo-by-zero
+    # at embed time. The whole point of this check is to catch that here instead.
+    if settings.EMBEDDING_DIMENSION < 1:
+        messages.append(
+            Error(
+                f"EMBEDDING_DIMENSION must be a positive integer, not "
+                f"{settings.EMBEDDING_DIMENSION}.",
+                hint="Set it to the provider's dimension (all-MiniLM-L6-v2 is 384).",
+                id="embedding.E003",
+            )
+        )
 
     if provider.dimension != settings.EMBEDDING_DIMENSION:
         messages.append(
