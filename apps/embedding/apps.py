@@ -17,7 +17,8 @@ from django.apps import AppConfig
 
 
 class EmbeddingConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
+    # No default_auto_field: this app has no models, so there is nothing for it to
+    # apply to. DEFAULT_AUTO_FIELD in config/settings.py covers the apps that do.
     name = "apps.embedding"
 
     def ready(self) -> None:
