@@ -115,6 +115,20 @@ class TestDeferredLoading:
         build.assert_called_once()
 
 
+class TestInputContract:
+    def test_punctuation_only_text_yields_one_vector(self, settings):
+        # The contract is defined on non-whitespace content, not on what survives a
+        # tokenizer. test_contract.py proves the fake accepts "..."; without this the
+        # parity claim rests on the fake alone, and a local provider that rejected it
+        # would fail only in production against a query a user can actually type.
+        dimension = settings.EMBEDDING_DIMENSION
+        module = stub_module(dimension, encoded=[[1.0] + [0.0] * (dimension - 1)])
+        with mock.patch.dict(sys.modules, {"sentence_transformers": module}):
+            vectors = LocalEmbeddingProvider().embed(["..."])
+        assert len(vectors) == 1
+        assert len(vectors[0]) == dimension
+
+
 class TestLoadedDimensionAssertion:
     def test_a_model_disagreeing_with_the_declaration_fails(self, settings):
         # The declaration is a promise the system check relies on; if the real model
