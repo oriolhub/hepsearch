@@ -50,10 +50,17 @@
     <form method="get">
         <label for="query">Search papers</label>
         <input id="query" name="q" type="search" value="{{ query }}">
+        <label for="mode">Mode</label>
+        <select id="mode" name="mode">
+            <option value="keyword"{% if mode == "keyword" %} selected{% endif %}>Keyword</option>
+            <option value="semantic"{% if mode == "semantic" %} selected{% endif %}>Semantic</option>
+        </select>
         <button type="submit">Search</button>
     </form>
 
-    {% if no_results %}
+    {% if unavailable %}
+        <p role="alert">{{ unavailable }}</p>
+    {% elif no_results %}
         <p role="status">No results found.</p>
     {% elif has_query %}
         {% for paper in papers %}

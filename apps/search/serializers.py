@@ -45,6 +45,7 @@ class PaperSearchResultSerializer(serializers.Serializer):
     publication_date = serializers.SerializerMethodField()
     abstract_snippet = serializers.SerializerMethodField()
     inspire_url = serializers.CharField()
+    score = serializers.FloatField(required=False, allow_null=True)
 
     def get_publication_date(self, paper: Paper) -> datetime.date | None:
         return complete_date(paper.earliest_date)

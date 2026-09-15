@@ -36,6 +36,7 @@ def test_a_result_carries_every_required_field():
     assert data["publication_date"] == datetime.date(2020, 5, 10)
     assert data["abstract_snippet"] == "An abstract"
     assert data["inspire_url"] == "https://inspirehep.net/literature/42"
+    assert data["score"] is None
 
 
 @pytest.mark.django_db

@@ -2,6 +2,7 @@ import re
 
 import pytest
 
+from apps.embedding import registry
 from apps.papers.models import Paper
 
 
@@ -116,3 +117,49 @@ def test_search_page_and_api_keep_the_same_result_order(client):
         first.title,
         second.title,
     ]
+
+
+@pytest.mark.django_db
+def test_search_page_offers_and_preserves_mode(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    first = make_paper(
+        1,
+        title="Higgs self coupling",
+        abstract="A study of the Higgs self coupling.",
+    )
+    provider = registry.get_provider()
+    first.embedding = provider.embed([first.embedding_text])[0]
+    first.embedding_model = provider.model_name
+    first.save(update_fields=["embedding", "embedding_model"])
+
+    response = client.get("/", {"q": "higgs self coupling", "mode": "semantic"})
+
+    assert response.status_code == 200
+    assert b'name="mode"' in response.content
+    assert b'value="semantic" selected' in response.content
+    assert first.title.encode() in response.content
+
+
+@pytest.mark.django_db
+def test_search_page_does_not_reflect_an_unknown_mode_unescaped(client):
+    response = client.get("/", {"q": "higgs", "mode": "<script>alert(1)</script>"})
+    body = response.content.decode()
+
+    assert response.status_code == 400
+    assert "<script>alert(1)</script>" not in body
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in body
+
+
+@pytest.mark.django_db
+def test_search_page_reports_an_unusable_semantic_corpus(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    make_paper(1, title="Higgs boson", abstract="A higgs paper.")
+
+    response = client.get("/", {"q": "higgs", "mode": "semantic"})
+    body = response.content.decode()
+
+    assert response.status_code == 200
+    assert "No results found." not in body
+    assert "embed_papers" in body

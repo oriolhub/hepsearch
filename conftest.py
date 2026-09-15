@@ -19,7 +19,10 @@ def _reset_embedding_provider():
     so nothing here can pull in an embedding library.
     """
     from apps.embedding import registry
+    from apps.search import health
 
     registry.reset()
+    health.reset()
     yield
     registry.reset()
+    health.reset()
