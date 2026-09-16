@@ -7,11 +7,41 @@ composable with a future hybrid ranker (HS-012) instead of being reimplemented b
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
+from django.conf import settings
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import ExpressionWrapper, F, FloatField, QuerySet, Value
 from pgvector.django import CosineDistance
 
 from apps.papers.models import SEARCH_CONFIG, Paper
+
+
+@dataclass(frozen=True)
+class FusedResult:
+    paper_id: int
+    score: float
+    methods: tuple[str, ...]
+
+
+def reciprocal_rank_fusion(keyword_ids: list[int], semantic_ids: list[int]) -> list[FusedResult]:
+    scores: dict[int, tuple[float, set[str]]] = {}
+    for ids, method in ((keyword_ids, "keyword"), (semantic_ids, "semantic")):
+        for rank, paper_id in enumerate(ids, start=1):
+            score, methods = scores.get(paper_id, (0.0, set()))
+            methods.add(method)
+            scores[paper_id] = (score + 1 / (settings.RRF_K + rank), methods)
+
+    return [
+        FusedResult(
+            paper_id,
+            score,
+            tuple(method for method in ("keyword", "semantic") if method in methods),
+        )
+        for paper_id, (score, methods) in sorted(
+            scores.items(), key=lambda item: (-item[1][0], item[0])
+        )
+    ]
 
 
 def search(query: str, limit: int) -> QuerySet[Paper]:

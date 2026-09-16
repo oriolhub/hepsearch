@@ -142,6 +142,55 @@ def test_search_page_offers_and_preserves_mode(client, settings):
 
 
 @pytest.mark.django_db
+def test_search_page_defaults_to_hybrid(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    provider = registry.get_provider()
+    paper = make_paper(
+        1,
+        title="Higgs self coupling",
+        abstract="A study of the Higgs self coupling.",
+    )
+    paper.embedding = provider.embed([paper.embedding_text])[0]
+    paper.embedding_model = provider.model_name
+    paper.save(update_fields=["embedding", "embedding_model"])
+
+    response = client.get("/", {"q": "higgs self coupling"})
+
+    assert response.status_code == 200
+    assert b'value="hybrid" selected' in response.content
+    assert paper.title.encode() in response.content
+
+
+@pytest.mark.django_db
+def test_search_page_shows_hybrid_degradation_notice(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    make_paper(1, title="Higgs boson", abstract="A higgs paper.")
+
+    response = client.get("/", {"q": "higgs", "mode": "hybrid"})
+
+    assert response.status_code == 200
+    assert b"embed_papers" in response.content
+    assert b"No results found." not in response.content
+
+
+@pytest.mark.django_db
+def test_search_page_degraded_with_no_hits_does_not_claim_no_results(client, settings):
+    """Nothing was properly searched, so "No results found." would be a false claim."""
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    make_paper(1, title="Higgs boson", abstract="A higgs paper.")
+
+    response = client.get("/", {"q": "zzznonexistentqueryxyz"})
+    body = response.content.decode()
+
+    assert response.status_code == 200
+    assert "embed_papers" in body
+    assert "No results found." not in body
+
+
+@pytest.mark.django_db
 def test_search_page_does_not_reflect_an_unknown_mode_unescaped(client):
     response = client.get("/", {"q": "higgs", "mode": "<script>alert(1)</script>"})
     body = response.content.decode()

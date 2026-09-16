@@ -8,7 +8,6 @@ from __future__ import annotations
 import logging
 
 from django.conf import settings
-from django.db.models import QuerySet
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.html import escape
@@ -21,8 +20,8 @@ from apps.papers.models import Paper
 
 from .health import check_stale_embeddings
 from .modes import SearchMode, parse_mode
+from .ranking import reciprocal_rank_fusion, semantic_search
 from .ranking import search as keyword_search
-from .ranking import semantic_search
 from .serializers import PaperSearchResultSerializer
 
 logger = logging.getLogger(__name__)
@@ -31,19 +30,73 @@ PROVIDER_UNAVAILABLE = "Semantic search is unavailable; the embedding provider c
 CORPUS_UNAVAILABLE = "Semantic search is unavailable; run embed_papers to embed the corpus."
 
 
-def _rank(query: str, mode: SearchMode) -> QuerySet[Paper]:
+def _rank(query: str, mode: SearchMode) -> list[Paper]:
     if mode is SearchMode.KEYWORD:
-        return keyword_search(query, settings.SEARCH_RESULT_LIMIT)
+        return list(keyword_search(query, settings.SEARCH_RESULT_LIMIT))
 
     provider = get_provider()
     check_stale_embeddings(provider.model_name)
     vector = provider.embed([query])[0]
-    return semantic_search(
-        Paper.objects.all(),
-        vector,
-        settings.SEARCH_RESULT_LIMIT,
-        model_name=provider.model_name,
+    return list(
+        semantic_search(
+            Paper.objects.all(),
+            vector,
+            settings.SEARCH_RESULT_LIMIT,
+            model_name=provider.model_name,
+        )
     )
+
+
+def _degraded_hybrid(keyword_papers: list[Paper], reason: str) -> tuple[list[Paper], str | None]:
+    """Serve the keyword ranking alone, naming it, unless the corpus is merely empty.
+
+    `_empty_semantic_reason` is the single place that tells an outage apart from a
+    corpus nobody has ingested yet, so both degradation paths ask it rather than
+    repeating the predicate in opposite directions. Marking the survivors "keyword"
+    here rather than in the view keeps the API and the page agreeing on what a degraded
+    result is.
+    """
+    if _empty_semantic_reason() is None:
+        return [], None
+    papers = keyword_papers[: settings.SEARCH_RESULT_LIMIT]
+    for paper in papers:
+        paper.methods = ("keyword",)
+    return papers, reason
+
+
+def _hybrid_rank(query: str) -> tuple[list[Paper], str | None]:
+    keyword_papers = list(keyword_search(query, settings.HYBRID_CANDIDATE_DEPTH))
+    try:
+        provider = get_provider()
+        check_stale_embeddings(provider.model_name)
+        vector = provider.embed([query])[0]
+        semantic_papers = list(
+            semantic_search(
+                Paper.objects.all(),
+                vector,
+                settings.HYBRID_CANDIDATE_DEPTH,
+                model_name=provider.model_name,
+            )
+        )
+    except ImportError:
+        logger.exception("The embedding provider could not be loaded")
+        return _degraded_hybrid(keyword_papers, PROVIDER_UNAVAILABLE)
+
+    if not semantic_papers:
+        return _degraded_hybrid(keyword_papers, CORPUS_UNAVAILABLE)
+
+    paper_map = {paper.pk: paper for paper in keyword_papers + semantic_papers}
+    fused = reciprocal_rank_fusion(
+        [paper.pk for paper in keyword_papers],
+        [paper.pk for paper in semantic_papers],
+    )
+    papers = []
+    for result in fused[: settings.SEARCH_RESULT_LIMIT]:
+        paper = paper_map[result.paper_id]
+        paper.score = result.score
+        paper.methods = result.methods
+        papers.append(paper)
+    return papers, None
 
 
 def _ranked_papers(query: str, mode: SearchMode) -> tuple[list[Paper], str | None]:
@@ -54,8 +107,10 @@ def _ranked_papers(query: str, mode: SearchMode) -> tuple[list[Paper], str | Non
     is asked to embed. That is an operator-fixable outage, not a crash: it belongs on
     the same 503 surface as an unembedded corpus, not in a 500 traceback.
     """
+    if mode is SearchMode.HYBRID:
+        return _hybrid_rank(query)
     try:
-        return list(_rank(query, mode)), None
+        return _rank(query, mode), None
     except ImportError:
         logger.exception("The embedding provider could not be loaded")
         return [], PROVIDER_UNAVAILABLE
@@ -94,7 +149,11 @@ def search(request: Request) -> Response:
         if unavailable:
             return Response({"mode": mode.value, "detail": unavailable}, status=503)
     results = PaperSearchResultSerializer(papers, many=True).data
-    return Response({"mode": mode.value, "count": len(results), "results": results})
+    body = {"mode": mode.value, "count": len(results), "results": results}
+    if mode is SearchMode.HYBRID and unavailable:
+        body["degraded"] = True
+        body["warning"] = unavailable
+    return Response(body)
 
 
 def search_page(request):
@@ -108,8 +167,12 @@ def search_page(request):
     has_query = bool(query.strip())
     papers: list[Paper] = []
     unavailable: str | None = None
+    degraded: str | None = None
     if has_query:
         papers, unavailable = _ranked_papers(query, mode)
+        if mode is SearchMode.HYBRID:
+            degraded = unavailable
+            unavailable = None
         if mode is SearchMode.SEMANTIC and not papers:
             unavailable = unavailable or _empty_semantic_reason()
     return render(
@@ -120,7 +183,9 @@ def search_page(request):
             "papers": papers,
             "has_query": has_query,
             "unavailable": unavailable,
-            "no_results": has_query and not papers and not unavailable,
+            "degraded": bool(degraded),
+            "warning": degraded,
+            "no_results": has_query and not papers and not unavailable and not degraded,
             "mode": mode.value,
         },
     )

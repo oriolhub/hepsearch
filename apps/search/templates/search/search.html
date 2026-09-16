@@ -54,15 +54,20 @@
         <select id="mode" name="mode">
             <option value="keyword"{% if mode == "keyword" %} selected{% endif %}>Keyword</option>
             <option value="semantic"{% if mode == "semantic" %} selected{% endif %}>Semantic</option>
+            <option value="hybrid"{% if mode == "hybrid" %} selected{% endif %}>Hybrid</option>
         </select>
         <button type="submit">Search</button>
     </form>
 
     {% if unavailable %}
         <p role="alert">{{ unavailable }}</p>
-    {% elif no_results %}
+    {% else %}
+        {% if degraded %}
+            <p role="alert">{{ warning }}</p>
+        {% endif %}
+        {% if no_results %}
         <p role="status">No results found.</p>
-    {% elif has_query %}
+        {% elif has_query %}
         {% for paper in papers %}
             <article>
                 <h2><a href="{{ paper.inspire_url }}">{{ paper.title }}</a></h2>
@@ -75,6 +80,7 @@
                 <p class="abstract">{{ paper.abstract_snippet }}</p>
             </article>
         {% endfor %}
+        {% endif %}
     {% endif %}
 </body>
 </html>

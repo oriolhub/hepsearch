@@ -6,11 +6,12 @@ from enum import StrEnum
 class SearchMode(StrEnum):
     KEYWORD = "keyword"
     SEMANTIC = "semantic"
+    HYBRID = "hybrid"
 
 
 def parse_mode(value: str | None) -> SearchMode:
     if value is None:
-        return SearchMode.KEYWORD
+        return SearchMode.HYBRID
     try:
         return SearchMode(value)
     except ValueError as error:

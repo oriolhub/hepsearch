@@ -1,3 +1,4 @@
+import logging
 from unittest import mock
 
 import pytest
@@ -44,7 +45,7 @@ def test_a_whitespace_only_query_returns_400(client):
 def test_a_query_matching_nothing_returns_200_with_zero_count(client):
     make_paper(1, title="Higgs boson", abstract="A study of the higgs boson.")
 
-    response = client.get("/api/search/", {"q": "zzznonexistentqueryxyz"})
+    response = client.get("/api/search/", {"q": "zzznonexistentqueryxyz", "mode": "keyword"})
 
     assert response.status_code == 200
     assert response.json() == {"mode": "keyword", "count": 0, "results": []}
@@ -54,12 +55,144 @@ def test_a_query_matching_nothing_returns_200_with_zero_count(client):
 def test_keyword_results_include_scores_and_mode(client):
     make_paper(1, title="Higgs boson", abstract="A study of the higgs boson.")
 
-    response = client.get("/api/search/", {"q": "higgs"})
+    response = client.get("/api/search/", {"q": "higgs", "mode": "keyword"})
 
     assert response.status_code == 200
     body = response.json()
     assert body["mode"] == "keyword"
     assert body["results"][0]["score"] > 0
+    assert body["results"][0]["methods"] == []
+
+
+@pytest.mark.django_db
+def test_omitted_mode_uses_hybrid_and_reports_methods(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    provider = FakeEmbeddingProvider()
+    paper = make_paper(
+        1,
+        title="Higgs self coupling",
+        abstract="A study of the Higgs self coupling.",
+        embedding=provider.embed(["higgs self coupling"])[0],
+        embedding_model=provider.model_name,
+    )
+
+    response = client.get("/api/search/", {"q": "higgs self coupling"})
+
+    assert response.status_code == 200
+    result = response.json()["results"][0]
+    assert response.json()["mode"] == "hybrid"
+    assert result["id"] == paper.pk
+    assert set(result["methods"]) == {"keyword", "semantic"}
+    assert "degraded" not in response.json()
+
+
+@pytest.mark.django_db
+def test_hybrid_returns_semantic_only_results_when_keyword_has_no_hits(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    provider = FakeEmbeddingProvider()
+    paper = make_paper(
+        1,
+        title="Higgs",
+        abstract="Self coupling",
+        embedding=provider.embed(["higgs self coupling"])[0],
+        embedding_model=provider.model_name,
+    )
+
+    with mock.patch("apps.search.views.keyword_search", return_value=Paper.objects.none()):
+        response = client.get("/api/search/", {"q": "higgs self coupling", "mode": "hybrid"})
+
+    assert response.status_code == 200
+    assert response.json()["results"][0]["id"] == paper.pk
+
+
+@pytest.mark.django_db
+def test_hybrid_degrades_when_the_provider_cannot_be_loaded(client, settings, caplog):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    make_paper(1, title="Higgs boson", abstract="A higgs paper.")
+
+    with (
+        caplog.at_level(logging.ERROR, logger="apps.search.views"),
+        mock.patch.object(
+            FakeEmbeddingProvider,
+            "embed",
+            side_effect=ImportError("sentence-transformers is not installed"),
+        ),
+    ):
+        response = client.get("/api/search/", {"q": "higgs", "mode": "hybrid"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["mode"] == "hybrid"
+    assert body["degraded"] is True
+    assert "provider" in body["warning"]
+    assert body["results"][0]["methods"] == ["keyword"]
+    # The outage must not be silent just because the request still returned 200.
+    assert "embedding provider could not be loaded" in caplog.text
+
+
+@pytest.mark.django_db
+def test_hybrid_reports_stale_embeddings(client, settings, caplog):
+    """Hybrid is the default mode, so drift must not go unreported on it."""
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    provider = FakeEmbeddingProvider()
+    make_paper(
+        1,
+        title="Higgs self coupling",
+        abstract="A study of the Higgs self coupling.",
+        embedding=provider.embed(["higgs self coupling"])[0],
+        embedding_model=provider.model_name,
+    )
+    make_paper(
+        2,
+        title="Higgs boson mass",
+        abstract="A study of the Higgs boson mass.",
+        embedding=provider.embed(["higgs boson mass"])[0],
+        embedding_model="a-retired-model",
+    )
+
+    with caplog.at_level(logging.WARNING, logger="apps.search.health"):
+        response = client.get("/api/search/", {"q": "higgs self coupling", "mode": "hybrid"})
+
+    assert response.status_code == 200
+    assert "1 stale embeddings" in caplog.text
+
+
+@pytest.mark.django_db
+def test_hybrid_empty_corpus_has_no_degradation(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+
+    response = client.get("/api/search/", {"q": "higgs", "mode": "hybrid"})
+
+    assert response.status_code == 200
+    assert response.json() == {"mode": "hybrid", "count": 0, "results": []}
+
+
+@pytest.mark.django_db
+def test_hybrid_uses_one_query_per_arm_plus_the_corpus_health_check(
+    client, settings, django_assert_num_queries
+):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    provider = FakeEmbeddingProvider()
+    make_paper(
+        1,
+        title="Higgs self coupling",
+        abstract="A study of the Higgs self coupling.",
+        embedding=provider.embed(["higgs self coupling"])[0],
+        embedding_model=provider.model_name,
+    )
+
+    # One per ranking, plus the stale-embedding count, which is cached for the life of
+    # the process and so is paid once rather than per request.
+    with django_assert_num_queries(3):
+        response = client.get("/api/search/", {"q": "higgs self coupling", "mode": "hybrid"})
+
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
@@ -87,14 +220,14 @@ def test_a_stopword_only_query_returns_200_with_zero_count(client):
 def test_punctuation_heavy_queries_do_not_raise(client, query):
     make_paper(1, title="Higgs boson", abstract="A study of the higgs boson.")
 
-    response = client.get("/api/search/", {"q": query})
+    response = client.get("/api/search/", {"q": query, "mode": "keyword"})
 
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_unknown_mode_returns_400(client):
-    response = client.get("/api/search/", {"q": "higgs", "mode": "hybrid"})
+    response = client.get("/api/search/", {"q": "higgs", "mode": "unknown"})
 
     assert response.status_code == 400
     assert "results" not in response.json()
@@ -195,7 +328,7 @@ def test_keyword_scores_descend_with_the_result_order(client):
     make_paper(2, title="Higgs boson study", abstract="A paper mentioning self-coupling once.")
     make_paper(3, title="Collider physics", abstract="A paper that mentions higgs in passing.")
 
-    response = client.get("/api/search/", {"q": "higgs self-coupling"})
+    response = client.get("/api/search/", {"q": "higgs self-coupling", "mode": "keyword"})
 
     scores = [result["score"] for result in response.json()["results"]]
     assert len(scores) >= 2

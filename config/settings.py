@@ -25,6 +25,11 @@ INGEST_BATCH_SIZE = env.int("INGEST_BATCH_SIZE", default=INSPIRE_PAGE_SIZE)
 # Bounds both the response size and the work the database does per search request.
 SEARCH_RESULT_LIMIT = env.int("SEARCH_RESULT_LIMIT", default=20)
 SEARCH_AUTHOR_SAMPLE_SIZE = env.int("SEARCH_AUTHOR_SAMPLE_SIZE", default=5)
+# Bounded by pgvector's hnsw.ef_search default of 40; raising this alone has no effect.
+HYBRID_CANDIDATE_DEPTH = env.int("HYBRID_CANDIDATE_DEPTH", default=40)
+# Measured on this corpus: k=60 demoted both arm top picks below three mid-list
+# agreements on the paraphrase query; k=5 kept both top picks in fused positions 1-2.
+RRF_K = env.int("RRF_K", default=5)
 # Bounds the abstract excerpt returned by the search API; a presentation constant, not
 # a stored value.
 ABSTRACT_SNIPPET_CHARS = env.int("ABSTRACT_SNIPPET_CHARS", default=280)
