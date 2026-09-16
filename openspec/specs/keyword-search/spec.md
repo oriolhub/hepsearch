@@ -5,11 +5,18 @@ TBD - created by syncing change fulltext-search-api.
 
 ## Requirements
 
+
 ### Requirement: The corpus is searchable by keyword over HTTP
 
 The system SHALL expose a read-only endpoint at `/api/search/` that accepts a query
 string in a `q` parameter and returns matching papers as JSON. The endpoint SHALL be
 public and SHALL require no authentication, because the corpus is public literature.
+
+The endpoint SHALL accept an optional `mode` parameter naming the ranking strategy. Its
+absence SHALL select keyword ranking, so that existing callers observe no change in the
+papers selected, their ordering, or how they are scored. A `mode` the system does not
+recognise SHALL be refused with a 400 status and SHALL NOT produce a server error, and
+SHALL NOT silently fall back to a different ranking.
 
 #### Scenario: A query returns matching papers
 - **WHEN** a caller requests the search endpoint with a query matching stored papers
@@ -23,6 +30,26 @@ public and SHALL require no authentication, because the corpus is public literat
 #### Scenario: The search app does not depend on ingestion
 - **WHEN** the modules of the search app are inspected
 - **THEN** none of them imports the ingestion app
+
+#### Scenario: An omitted mode ranks by keyword
+- **WHEN** a caller requests the search endpoint with no `mode` parameter
+- **THEN** the papers returned and their order are those keyword ranking produces
+
+#### Scenario: An unknown mode is refused
+- **WHEN** a caller requests the search endpoint with a `mode` the system does not
+  recognise
+- **THEN** the response status is 400
+- **AND** no server error occurs
+
+#### Scenario: A refused mode does not fall back
+- **WHEN** a request is refused for an unrecognised mode
+- **THEN** no papers are present in the response
+
+#### Scenario: A refused mode is not reflected back as markup
+- **WHEN** the search page is requested with an unrecognised `mode` whose value
+  contains HTML
+- **THEN** the response status is 400
+- **AND** the submitted value does not appear in the body as executable markup
 
 ### Requirement: Results are ranked by relevance, with titles outranking abstracts
 
@@ -51,6 +78,7 @@ vector for each candidate row, so that ranking and indexing cannot disagree.
 #### Scenario: Ordering is stable for a repeated query
 - **WHEN** the same query is issued twice against unchanged data
 - **THEN** the same papers are returned in the same order
+
 
 ### Requirement: Any user input is safe to submit
 
@@ -86,6 +114,7 @@ invented for this project.
 - **WHEN** the search implementation is inspected
 - **THEN** user text is passed as a parsed query value, not concatenated into a query
   expression
+
 
 ### Requirement: An absent or empty query is rejected, an unmatched one is not
 
@@ -124,12 +153,18 @@ not an error.
 - **THEN** the response status is 200
 - **AND** the result list is empty
 
+
 ### Requirement: Each result carries what a reader needs to judge it
 
 Every result SHALL carry the paper's identifier, its title, a bounded sample of its
 authors, the total number of authors, its publication date, an excerpt of its abstract,
-and a link to the paper's record on INSPIRE. The link SHALL be derived from the paper's
-INSPIRE identifier rather than stored separately.
+a link to the paper's record on INSPIRE, and the score by which it was ranked. The link
+SHALL be derived from the paper's INSPIRE identifier rather than stored separately.
+
+The score SHALL be present in every ranking mode, so that a caller reads one response
+shape regardless of how the results were ranked. Its scale SHALL be that of the ranking
+mode which produced it and SHALL NOT be assumed comparable across modes; the mode is
+reported alongside the results.
 
 The author list SHALL be bounded to a small leading sample rather than reproducing every
 author, because collaboration papers routinely carry thousands of author names. The
@@ -143,7 +178,22 @@ so that a caller can tell an abbreviated abstract from a complete one.
 #### Scenario: A result carries the expected fields
 - **WHEN** a search returns a paper
 - **THEN** the result carries its identifier, title, author sample, author total,
-  publication date, abstract excerpt and INSPIRE link
+  publication date, abstract excerpt, INSPIRE link and score
+
+#### Scenario: Keyword results carry a score
+- **WHEN** a keyword search returns papers
+- **THEN** each result carries the relevance score by which it was ranked
+- **AND** the scores descend with the result order
+
+#### Scenario: Semantic results carry a similarity score
+- **WHEN** a semantic search returns papers
+- **THEN** each result carries its similarity to the query, derived from the cosine
+  distance
+- **AND** a similarity below zero is reported as it is rather than raised to zero
+
+#### Scenario: The response names the mode that produced it
+- **WHEN** any successful search response is inspected
+- **THEN** it reports which ranking mode produced the results
 
 #### Scenario: A collaboration paper's authors are sampled, not reproduced
 - **WHEN** a returned paper has thousands of authors
@@ -186,11 +236,10 @@ so that a caller can tell an abbreviated abstract from a complete one.
 
 ### Requirement: Partial publication dates are presented as dates
 
-The corpus stores publication dates at differing precision: some papers state a full
-date, some only a year and month, and some only a year. The API SHALL present a date
-for every paper regardless of the precision stored, filling an unknown month or day
-with the first of the period, so that a caller receives one consistent type rather
-than three shapes of string.
+The API SHALL present publication dates consistently even though the corpus stores them
+at differing precision: some papers state a full date, some only a year and month, and
+some only a year. It SHALL fill an unknown month or day with the first of the period,
+so that a caller receives one consistent type rather than three shapes of string.
 
 #### Scenario: A full date is presented unchanged
 - **WHEN** a paper stores a complete date
@@ -208,6 +257,7 @@ than three shapes of string.
 - **WHEN** a paper stores no date at all
 - **THEN** the result reports no date
 - **AND** the response is still returned successfully
+
 
 ### Requirement: The number of results is capped by a named setting
 
@@ -232,6 +282,7 @@ trim the response after the fact.
 - **WHEN** a query matches fewer papers than the cap
 - **THEN** only the matching papers are returned
 
+
 ### Requirement: The response is an object, not a bare list
 
 The response body SHALL be an object carrying the results under a named key alongside
@@ -249,6 +300,7 @@ added later without breaking callers.
 #### Scenario: An empty result set keeps the same shape
 - **WHEN** a query matches nothing
 - **THEN** the body is still an object carrying a count of zero and an empty list
+
 
 ### Requirement: Ranking is a function, callable without HTTP
 
@@ -273,6 +325,7 @@ live inside the ranking callable.
 #### Scenario: Ranking is free of presentation
 - **WHEN** the ranking callable is inspected
 - **THEN** it performs no excerpting, date completion or link construction
+
 
 ### Requirement: The capability is fully testable offline
 
