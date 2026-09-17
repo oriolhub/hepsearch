@@ -6,12 +6,16 @@ apps/search/ranking.py stay pure — they return orderings, never status codes.
 from __future__ import annotations
 
 import logging
+import math
+import time
 
 from django.conf import settings
-from django.http import HttpResponseBadRequest
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.html import escape
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import Throttled
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -20,14 +24,44 @@ from apps.papers.models import Paper
 
 from .health import check_stale_embeddings
 from .modes import SearchMode, parse_mode
+from .pagination import SearchPagination
 from .ranking import reciprocal_rank_fusion, semantic_search
 from .ranking import search as keyword_search
 from .serializers import PaperSearchResultSerializer
+from .throttling import EmbeddingThrottle, KeywordThrottle
 
 logger = logging.getLogger(__name__)
 
 PROVIDER_UNAVAILABLE = "Semantic search is unavailable; the embedding provider could not be loaded."
 CORPUS_UNAVAILABLE = "Semantic search is unavailable; run embed_papers to embed the corpus."
+
+
+def _throttle_for_mode(mode: SearchMode):
+    return KeywordThrottle if mode is SearchMode.KEYWORD else EmbeddingThrottle
+
+
+def _allow_request(request, mode: SearchMode) -> None:
+    throttle = _throttle_for_mode(mode)()
+    if not throttle.allow_request(request, None):
+        raise Throttled(wait=throttle.wait())
+
+
+def _safe_query_for_log(query: str) -> str:
+    return query.encode("unicode_escape").decode("ascii")
+
+
+def _rank_with_logging(query: str, mode: SearchMode):
+    started = time.monotonic()
+    result = _ranked_papers(query, mode)
+    elapsed = time.monotonic() - started
+    if elapsed > settings.SEARCH_SLOW_SECONDS:
+        logger.warning(
+            "Slow search elapsed=%.3fs mode=%s query=%s",
+            elapsed,
+            mode.value,
+            _safe_query_for_log(query),
+        )
+    return result
 
 
 def _rank(query: str, mode: SearchMode) -> list[Paper]:
@@ -138,22 +172,50 @@ def search(request: Request) -> Response:
 
     query = request.query_params.get("q", "")
     if not query.strip():
+        return Response({"detail": "Parameter 'q' must be non-empty."}, status=400)
+    if len(query) > settings.SEARCH_QUERY_MAX_CHARS:
         return Response(
-            {"detail": "A non-empty 'q' query parameter is required."},
+            {
+                "detail": (
+                    f"Parameter 'q' must be at most {settings.SEARCH_QUERY_MAX_CHARS} characters."
+                )
+            },
             status=400,
         )
+    raw_page_size = request.query_params.get("page_size")
+    if raw_page_size is not None:
+        try:
+            page_size = int(raw_page_size)
+        except ValueError:
+            return Response({"detail": "Parameter 'page_size' must be an integer."}, status=400)
+        if not 1 <= page_size <= settings.SEARCH_MAX_PAGE_SIZE:
+            return Response(
+                {
+                    "detail": (
+                        f"Parameter 'page_size' must be between 1 and "
+                        f"{settings.SEARCH_MAX_PAGE_SIZE}."
+                    )
+                },
+                status=400,
+            )
+    _allow_request(request, mode)
 
-    papers, unavailable = _ranked_papers(query, mode)
+    papers, unavailable = _rank_with_logging(query, mode)
     if mode is SearchMode.SEMANTIC and not papers:
         unavailable = unavailable or _empty_semantic_reason()
         if unavailable:
             return Response({"mode": mode.value, "detail": unavailable}, status=503)
-    results = PaperSearchResultSerializer(papers, many=True).data
-    body = {"mode": mode.value, "count": len(results), "results": results}
-    if mode is SearchMode.HYBRID and unavailable:
-        body["degraded"] = True
-        body["warning"] = unavailable
-    return Response(body)
+    paginator = SearchPagination()
+    paginator.mode = mode.value
+    paginator.degraded = mode is SearchMode.HYBRID and bool(unavailable)
+    paginator.warning = unavailable
+    # Every response goes through the paginator, including an empty one. Returning a
+    # hand-built envelope for the empty case dropped the degradation report, which made
+    # a provider outage that had left no keyword hits indistinguishable from an honest
+    # miss. Paginating first also refuses an unusable page before any serialisation.
+    page = paginator.paginate_queryset(papers, request)
+    results = PaperSearchResultSerializer(page, many=True).data
+    return paginator.get_paginated_response(results)
 
 
 def search_page(request):
@@ -165,22 +227,53 @@ def search_page(request):
         # serves text/html without escaping, which browsers render.
         return HttpResponseBadRequest(escape(str(error)))
     has_query = bool(query.strip())
+    if len(query) > settings.SEARCH_QUERY_MAX_CHARS:
+        return HttpResponseBadRequest(
+            f"Parameter 'q' must be at most {settings.SEARCH_QUERY_MAX_CHARS} characters."
+        )
+    try:
+        page_size = int(request.GET.get("page_size", settings.SEARCH_PAGE_SIZE))
+    except ValueError:
+        return HttpResponseBadRequest("Parameter 'page_size' must be an integer.")
+    if not 1 <= page_size <= settings.SEARCH_MAX_PAGE_SIZE:
+        return HttpResponseBadRequest(
+            f"Parameter 'page_size' must be between 1 and {settings.SEARCH_MAX_PAGE_SIZE}."
+        )
+    page_number = request.GET.get("page", "1")
+    if not page_number.isdigit() or int(page_number) < 1:
+        return HttpResponse("Invalid page.", status=404)
     papers: list[Paper] = []
     unavailable: str | None = None
     degraded: str | None = None
+    page = None
     if has_query:
-        papers, unavailable = _ranked_papers(query, mode)
+        # Only a request that ranks is charged the rate. A query-less page load embeds
+        # nothing and ranks nothing, so spending an embedding-tier token on it would
+        # lock the UI out for a reader who never searched.
+        try:
+            _allow_request(request, mode)
+        except Throttled as error:
+            response = HttpResponse("Too many requests; please retry later.", status=429)
+            if error.wait is not None:
+                response["Retry-After"] = str(math.ceil(error.wait))
+            return response
+        papers, unavailable = _rank_with_logging(query, mode)
         if mode is SearchMode.HYBRID:
             degraded = unavailable
             unavailable = None
         if mode is SearchMode.SEMANTIC and not papers:
             unavailable = unavailable or _empty_semantic_reason()
+        try:
+            page = Paginator(papers, page_size).page(page_number)
+        except (PageNotAnInteger, EmptyPage):
+            return HttpResponse("Invalid page.", status=404)
     return render(
         request,
         "search/search.html",
         {
             "query": query,
-            "papers": papers,
+            "papers": page.object_list if page else [],
+            "page_obj": page,
             "has_query": has_query,
             "unavailable": unavailable,
             "degraded": bool(degraded),

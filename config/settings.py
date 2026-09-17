@@ -22,8 +22,13 @@ INSPIRE_BACKOFF_BASE = env.float("INSPIRE_BACKOFF_BASE", default=1.0)
 # One batch is one fetched page by default; a write batch does not have to match the
 # page size, but there is no reason for it to differ unless observed otherwise.
 INGEST_BATCH_SIZE = env.int("INGEST_BATCH_SIZE", default=INSPIRE_PAGE_SIZE)
-# Bounds both the response size and the work the database does per search request.
-SEARCH_RESULT_LIMIT = env.int("SEARCH_RESULT_LIMIT", default=20)
+# Retrieval depth, distinct from the 20-result response page. Semantic retrieval is
+# physically bounded by hnsw.ef_search=40; this setting bounds the other arms.
+SEARCH_RESULT_LIMIT = env.int("SEARCH_RESULT_LIMIT", default=60)
+SEARCH_PAGE_SIZE = env.int("SEARCH_PAGE_SIZE", default=20)
+SEARCH_MAX_PAGE_SIZE = env.int("SEARCH_MAX_PAGE_SIZE", default=100)
+SEARCH_QUERY_MAX_CHARS = env.int("SEARCH_QUERY_MAX_CHARS", default=1000)
+SEARCH_SLOW_SECONDS = env.float("SEARCH_SLOW_SECONDS", default=1.0)
 SEARCH_AUTHOR_SAMPLE_SIZE = env.int("SEARCH_AUTHOR_SAMPLE_SIZE", default=5)
 # Bounded by pgvector's hnsw.ef_search default of 40; raising this alone has no effect.
 HYBRID_CANDIDATE_DEPTH = env.int("HYBRID_CANDIDATE_DEPTH", default=40)
@@ -46,6 +51,39 @@ EMBEDDING_MODEL = env("EMBEDDING_MODEL", default="all-MiniLM-L6-v2")
 # dimension. Once HS-010 runs makemigrations the migration becomes the real contract:
 # changing this afterwards does not alter the column (AGENTS.md §6).
 EMBEDDING_DIMENSION = env.int("EMBEDDING_DIMENSION", default=384)
+
+# Keyword does no embedding work; semantic and hybrid share the stricter rate because
+# both embed. LocMemCache makes these per-process and reset-on-restart by design.
+THROTTLE_RATE_KEYWORD = env("THROTTLE_RATE_KEYWORD", default="60/min")
+THROTTLE_RATE_EMBEDDING = env("THROTTLE_RATE_EMBEDDING", default="20/min")
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "apps.search.pagination.SearchPagination",
+    "PAGE_SIZE": SEARCH_PAGE_SIZE,
+    "DEFAULT_THROTTLE_RATES": {
+        "keyword": THROTTLE_RATE_KEYWORD,
+        "embedding": THROTTLE_RATE_EMBEDDING,
+    },
+}
+
+# A shared cache would require Redis, deliberately out of scope for v1. Throttle
+# counters are therefore per-process and do not survive a restart.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "hepsearch-throttle",
+    }
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {
+        "apps.search": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "apps.ingestion": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+    },
+}
 
 INSTALLED_APPS = [
     "django.contrib.admin",

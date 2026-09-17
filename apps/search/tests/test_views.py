@@ -48,7 +48,13 @@ def test_a_query_matching_nothing_returns_200_with_zero_count(client):
     response = client.get("/api/search/", {"q": "zzznonexistentqueryxyz", "mode": "keyword"})
 
     assert response.status_code == 200
-    assert response.json() == {"mode": "keyword", "count": 0, "results": []}
+    assert response.json() == {
+        "mode": "keyword",
+        "count": 0,
+        "next": None,
+        "previous": None,
+        "results": [],
+    }
 
 
 @pytest.mark.django_db
@@ -169,7 +175,13 @@ def test_hybrid_empty_corpus_has_no_degradation(client, settings):
     response = client.get("/api/search/", {"q": "higgs", "mode": "hybrid"})
 
     assert response.status_code == 200
-    assert response.json() == {"mode": "hybrid", "count": 0, "results": []}
+    assert response.json() == {
+        "mode": "hybrid",
+        "count": 0,
+        "next": None,
+        "previous": None,
+        "results": [],
+    }
 
 
 @pytest.mark.django_db
@@ -265,7 +277,13 @@ def test_semantic_empty_corpus_returns_200(client, settings):
     response = client.get("/api/search/", {"q": "higgs", "mode": "semantic"})
 
     assert response.status_code == 200
-    assert response.json() == {"mode": "semantic", "count": 0, "results": []}
+    assert response.json() == {
+        "mode": "semantic",
+        "count": 0,
+        "next": None,
+        "previous": None,
+        "results": [],
+    }
 
 
 @pytest.mark.django_db

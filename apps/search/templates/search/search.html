@@ -80,6 +80,17 @@
                 <p class="abstract">{{ paper.abstract_snippet }}</p>
             </article>
         {% endfor %}
+        {% if page_obj and page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Search result pages">
+            {% if page_obj.has_previous %}
+                <a href="?q={{ query|urlencode }}&mode={{ mode|urlencode }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?q={{ query|urlencode }}&mode={{ mode|urlencode }}&page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+        {% endif %}
         {% endif %}
     {% endif %}
 </body>
