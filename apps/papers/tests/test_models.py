@@ -144,6 +144,21 @@ def test_display_authors_is_empty_without_authors():
 
 
 @pytest.mark.parametrize(
+    ("journal", "arxiv_id", "doi", "expected"),
+    [
+        ("Physical Review D", "1234.5678", "10.1/example", "Physical Review D"),
+        ("", "1234.5678", "10.1/example", "arXiv:1234.5678"),
+        ("", "", "10.1/example", "DOI: 10.1/example"),
+        ("", "", "", ""),
+    ],
+)
+def test_display_reference_falls_back_to_the_next_identifier(journal, arxiv_id, doi, expected):
+    paper = Paper(journal=journal, arxiv_id=arxiv_id, doi=doi)
+
+    assert paper.display_reference == expected
+
+
+@pytest.mark.parametrize(
     ("stored", "expected"),
     [
         ("2016-10-25", "25 October 2016"),

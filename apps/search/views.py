@@ -10,6 +10,7 @@ import math
 import time
 
 from django.conf import settings
+from django.contrib.postgres.search import SearchHeadline, SearchQuery
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -20,11 +21,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.embedding.registry import get_provider
-from apps.papers.models import Paper
+from apps.papers.models import SEARCH_CONFIG, Paper
 
 from .health import check_stale_embeddings
 from .modes import SearchMode, parse_mode
 from .pagination import SearchPagination
+from .presentation import HIGHLIGHT_END, HIGHLIGHT_START, render_highlighted_text
 from .ranking import reciprocal_rank_fusion, semantic_search
 from .ranking import search as keyword_search
 from .serializers import PaperSearchResultSerializer
@@ -50,9 +52,20 @@ def _safe_query_for_log(query: str) -> str:
     return query.encode("unicode_escape").decode("ascii")
 
 
-def _rank_with_logging(query: str, mode: SearchMode):
+def _headline(query: str):
+    return SearchHeadline(
+        "abstract",
+        SearchQuery(query, config=SEARCH_CONFIG, search_type="websearch"),
+        config=SEARCH_CONFIG,
+        start_sel=HIGHLIGHT_START,
+        stop_sel=HIGHLIGHT_END,
+        max_fragments=2,
+    )
+
+
+def _rank_with_logging(query: str, mode: SearchMode, *, highlight: bool = False):
     started = time.monotonic()
-    result = _ranked_papers(query, mode)
+    result = _ranked_papers(query, mode, highlight=highlight)
     elapsed = time.monotonic() - started
     if elapsed > settings.SEARCH_SLOW_SECONDS:
         logger.warning(
@@ -61,24 +74,28 @@ def _rank_with_logging(query: str, mode: SearchMode):
             mode.value,
             _safe_query_for_log(query),
         )
-    return result
+    return (*result, elapsed)
 
 
-def _rank(query: str, mode: SearchMode) -> list[Paper]:
+def _rank(query: str, mode: SearchMode, *, highlight: bool = False) -> list[Paper]:
     if mode is SearchMode.KEYWORD:
-        return list(keyword_search(query, settings.SEARCH_RESULT_LIMIT))
+        papers = keyword_search(query, settings.SEARCH_RESULT_LIMIT)
+        if highlight:
+            papers = papers.annotate(headline=_headline(query))
+        return list(papers)
 
     provider = get_provider()
     check_stale_embeddings(provider.model_name)
     vector = provider.embed([query])[0]
-    return list(
-        semantic_search(
-            Paper.objects.all(),
-            vector,
-            settings.SEARCH_RESULT_LIMIT,
-            model_name=provider.model_name,
-        )
+    papers = semantic_search(
+        Paper.objects.all(),
+        vector,
+        settings.SEARCH_RESULT_LIMIT,
+        model_name=provider.model_name,
     )
+    if highlight:
+        papers = papers.annotate(headline=_headline(query))
+    return list(papers)
 
 
 def _degraded_hybrid(keyword_papers: list[Paper], reason: str) -> tuple[list[Paper], str | None]:
@@ -98,20 +115,24 @@ def _degraded_hybrid(keyword_papers: list[Paper], reason: str) -> tuple[list[Pap
     return papers, reason
 
 
-def _hybrid_rank(query: str) -> tuple[list[Paper], str | None]:
-    keyword_papers = list(keyword_search(query, settings.HYBRID_CANDIDATE_DEPTH))
+def _hybrid_rank(query: str, *, highlight: bool = False) -> tuple[list[Paper], str | None]:
+    keyword_queryset = keyword_search(query, settings.HYBRID_CANDIDATE_DEPTH)
+    if highlight:
+        keyword_queryset = keyword_queryset.annotate(headline=_headline(query))
+    keyword_papers = list(keyword_queryset)
     try:
         provider = get_provider()
         check_stale_embeddings(provider.model_name)
         vector = provider.embed([query])[0]
-        semantic_papers = list(
-            semantic_search(
-                Paper.objects.all(),
-                vector,
-                settings.HYBRID_CANDIDATE_DEPTH,
-                model_name=provider.model_name,
-            )
+        semantic_queryset = semantic_search(
+            Paper.objects.all(),
+            vector,
+            settings.HYBRID_CANDIDATE_DEPTH,
+            model_name=provider.model_name,
         )
+        if highlight:
+            semantic_queryset = semantic_queryset.annotate(headline=_headline(query))
+        semantic_papers = list(semantic_queryset)
     except ImportError:
         logger.exception("The embedding provider could not be loaded")
         return _degraded_hybrid(keyword_papers, PROVIDER_UNAVAILABLE)
@@ -133,7 +154,9 @@ def _hybrid_rank(query: str) -> tuple[list[Paper], str | None]:
     return papers, None
 
 
-def _ranked_papers(query: str, mode: SearchMode) -> tuple[list[Paper], str | None]:
+def _ranked_papers(
+    query: str, mode: SearchMode, *, highlight: bool = False
+) -> tuple[list[Paper], str | None]:
     """Rank papers, returning why semantic search could not run rather than raising.
 
     sentence-transformers is an optional extra (AGENTS.md section 2), so on a default
@@ -142,9 +165,9 @@ def _ranked_papers(query: str, mode: SearchMode) -> tuple[list[Paper], str | Non
     the same 503 surface as an unembedded corpus, not in a 500 traceback.
     """
     if mode is SearchMode.HYBRID:
-        return _hybrid_rank(query)
+        return _hybrid_rank(query, highlight=highlight)
     try:
-        return _rank(query, mode), None
+        return _rank(query, mode, highlight=highlight), None
     except ImportError:
         logger.exception("The embedding provider could not be loaded")
         return [], PROVIDER_UNAVAILABLE
@@ -200,7 +223,7 @@ def search(request: Request) -> Response:
             )
     _allow_request(request, mode)
 
-    papers, unavailable = _rank_with_logging(query, mode)
+    papers, unavailable, _ = _rank_with_logging(query, mode)
     if mode is SearchMode.SEMANTIC and not papers:
         unavailable = unavailable or _empty_semantic_reason()
         if unavailable:
@@ -245,6 +268,7 @@ def search_page(request):
     papers: list[Paper] = []
     unavailable: str | None = None
     degraded: str | None = None
+    elapsed = 0.0
     page = None
     if has_query:
         # Only a request that ranks is charged the rate. A query-less page load embeds
@@ -257,7 +281,7 @@ def search_page(request):
             if error.wait is not None:
                 response["Retry-After"] = str(math.ceil(error.wait))
             return response
-        papers, unavailable = _rank_with_logging(query, mode)
+        papers, unavailable, elapsed = _rank_with_logging(query, mode, highlight=True)
         if mode is SearchMode.HYBRID:
             degraded = unavailable
             unavailable = None
@@ -267,6 +291,14 @@ def search_page(request):
             page = Paginator(papers, page_size).page(page_number)
         except (PageNotAnInteger, EmptyPage):
             return HttpResponse("Invalid page.", status=404)
+        # Only the papers this page actually renders are decorated: the rankers
+        # retrieve far more candidates than a page shows.
+        for paper in page.object_list:
+            if not getattr(paper, "methods", ()):
+                paper.methods = (mode.value,)
+            paper.highlighted_abstract = render_highlighted_text(
+                getattr(paper, "headline", None) or paper.abstract_snippet
+            )
     return render(
         request,
         "search/search.html",
@@ -280,5 +312,7 @@ def search_page(request):
             "warning": degraded,
             "no_results": has_query and not papers and not unavailable and not degraded,
             "mode": mode.value,
+            "retrieved_count": len(papers),
+            "elapsed": elapsed,
         },
     )

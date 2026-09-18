@@ -17,7 +17,9 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
+        form label:first-child { flex-basis: 100%; }
         input {
             flex: 1;
             font: inherit;
@@ -36,12 +38,29 @@
             margin: 0;
         }
         .authors,
-        .date {
+        .date,
+        .metadata,
+        .method {
             color: #555;
             font-size: 0.9rem;
         }
+        .method {
+            background: #eef2ff;
+            border-radius: 0.25rem;
+            color: #263b80;
+            display: inline-block;
+            margin-top: 0.4rem;
+            padding: 0.1rem 0.4rem;
+        }
         .abstract {
             margin-bottom: 0;
+        }
+        @media (max-width: 32rem) {
+            body { padding: 1rem 0.75rem; }
+            form { display: block; }
+            form > * { display: block; margin-bottom: 0.5rem; width: 100%; }
+            button { width: 100%; }
+            article { overflow-wrap: anywhere; }
         }
     </style>
 </head>
@@ -66,20 +85,35 @@
             <p role="alert">{{ warning }}</p>
         {% endif %}
         {% if no_results %}
-        <p role="status">No results found.</p>
+        <p role="status">No results found. Try rephrasing your search.</p>
         {% elif has_query %}
         {% for paper in papers %}
             <article>
                 <h2><a href="{{ paper.inspire_url }}">{{ paper.title }}</a></h2>
+                {% if paper.methods %}
+                    <div class="method">Found by: {{ paper.methods|join:", "|title }}</div>
+                {% endif %}
                 {% if paper.display_authors %}
                     <div class="authors">{{ paper.display_authors }}</div>
                 {% endif %}
-                {% if paper.display_date %}
-                    <div class="date">{{ paper.display_date }}</div>
-                {% endif %}
-                <p class="abstract">{{ paper.abstract_snippet }}</p>
+                <div class="metadata">
+                    {% if paper.display_reference %}{{ paper.display_reference }} · {% endif %}
+                    {% if paper.display_date %}{{ paper.display_date }} · {% endif %}
+                    {{ paper.citation_count|default_if_none:0 }} citations
+                    {% if paper.arxiv_id %}
+                        · <a href="https://arxiv.org/abs/{{ paper.arxiv_id }}">arXiv</a>
+                    {% endif %}
+                </div>
+                <p class="abstract">{{ paper.highlighted_abstract|safe }}</p>
             </article>
         {% endfor %}
+        {% if retrieved_count %}
+            <p role="status">
+                Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of
+                {{ retrieved_count }} retrieved results · Search completed in
+                {{ elapsed|floatformat:3 }}s
+            </p>
+        {% endif %}
         {% if page_obj and page_obj.paginator.num_pages > 1 %}
         <nav aria-label="Search result pages">
             {% if page_obj.has_previous %}

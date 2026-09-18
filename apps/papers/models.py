@@ -94,6 +94,16 @@ class Paper(models.Model):
         return self.author_summary(5)
 
     @property
+    def display_reference(self) -> str:
+        if self.journal:
+            return self.journal
+        if self.arxiv_id:
+            return f"arXiv:{self.arxiv_id}"
+        if self.doi:
+            return f"DOI: {self.doi}"
+        return ""
+
+    @property
     def display_date(self) -> str:
         value = self.earliest_date
         if not value:
