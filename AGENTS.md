@@ -67,11 +67,15 @@ which acceptance criterion currently fails without it.
 
 ```
 config/                 Django project: settings, urls, wsgi/asgi
+  health.py             Health-check endpoint
 apps/
   papers/               Domain: the Paper model, admin, migrations
+    presentation.py     Paper display helpers
   embedding/            The embedding seam: provider interface, local model, test double
   ingestion/            INSPIRE client + management commands that fill the corpus
-  search/               Query parsing, ranking, DRF views/serializers, templates
+  search/               Query parsing, ranking, presentation, DRF views/serializers, templates
+    presentation.py     Safe highlighted-text rendering
+tests/                  Project-level test configuration and fixtures
 board/                  The local task board (see §7)
 ```
 
@@ -117,6 +121,11 @@ the dimension contract is enforced by one.
 
 Do not delete the full-text path once vectors work. It is half of the final ranker.
 
+The HNSW vector index scans at most 40 candidates by default (`hnsw.ef_search=40`).
+`SEARCH_RESULT_LIMIT` is 60, but semantic retrieval cannot return more than that
+single index scan; `HYBRID_CANDIDATE_DEPTH` is therefore 40 as well. These are
+retrieval constraints, not per-request tuning knobs.
+
 ---
 
 ## 4. The data source
@@ -138,7 +147,9 @@ Verified against the live API:
 - The result window is **10,000 records**: a request whose offset is 10,000 or
   greater returns `400 BAD REQUEST`
 - No rate-limit headers are returned, which is not permission to hammer it.
-  Ingestion must throttle politely and set a descriptive `User-Agent`
+  INSPIRE publishes a limit of 15 requests per 5 seconds per IP; this project's
+  1.0-second throttle is 5 requests per 5 seconds, inside that limit. Ingestion
+  must throttle politely and set a descriptive `User-Agent`
 
 Response shape: `hits.total` (int), `hits.hits[].metadata`.
 
@@ -150,7 +161,7 @@ This is the single most important ingestion fact. Observed on live records:
 |---|---|---|
 | `control_number` | Always present | **The stable INSPIRE id — use it as the natural key** |
 | `titles[0].title` | Always present | |
-| `abstracts[].value` | **~90% of records** | Multiple abstracts with different `source` values are common |
+| `abstracts[].value` | **~84% of records** | Multiple abstracts with different `source` values are common |
 | `authors[].full_name` | Usually | Can be 50+ entries; collaboration papers can be thousands |
 | `arxiv_eprints[0]` | **Absent on ~29% of most-cited records** | When present, has `value` and `categories[]` |
 | `dois` | **Often absent entirely** | Preprints have no DOI. Indexing it as null-array crashes naive code |
@@ -160,8 +171,13 @@ This is the single most important ingestion fact. Observed on live records:
 Consequences that are **not** negotiable:
 
 - Every field except `control_number` and `title` is nullable on the model.
-- **Ingestion skips records with no abstract.** A paper with no abstract cannot
-  be embedded and pollutes results. To land 5,000 usable papers, fetch ~5,600.
+- **Ingestion skips records with no abstract.** About 16% of sampled records had
+  none. A paper with no abstract cannot be embedded and pollutes results. To
+  land 5,000 usable papers, fetch ~5,950.
+- INSPIRE metadata is reusable under its CC0 waiver subject to field-specific
+  caveats. Abstract reuse is permitted when `abstracts.source` is `arXiv` or
+  `CERN`; this client may store another source when neither is available. HS-018
+  records the source so the corpus can be audited.
 - Never index into a possibly-absent list. `metadata.get("dois", [{}])[0]` is a
   crash waiting to happen.
 
@@ -183,9 +199,8 @@ default, not a hardcoded constant.
 
 ## 5. Commands
 
-> The repository currently contains this documentation and the board. The code
-> skeleton is built by the board cards, in order. Commands below are the target
-> contract — a card is not done until its commands work.
+> These commands are the supported development workflow. A card is not done
+> until its relevant commands work.
 
 ```powershell
 # Infrastructure (Postgres + pgvector only; Django runs on the host)
@@ -200,7 +215,7 @@ docker compose down -v
 
 # Dependencies
 uv sync                          # install from the lockfile
-uv sync --extra local-embeddings # ...plus sentence-transformers (~2 GB with torch)
+uv sync --extra local-embeddings # ...plus sentence-transformers (~2 GB with torch on Linux; 892 MB measured on CPU-only Windows)
 uv add <package>                 # add a dependency (never edit pyproject by hand)
 
 # Django
@@ -218,8 +233,8 @@ uv run python manage.py embed_papers --force    # recompute even when the model 
 uv run pytest                                   # whole suite
 uv run pytest apps/search                       # one app
 uv run pytest apps/search/tests/test_ranking.py # one file
-uv run pytest apps/search/tests/test_ranking.py::test_rrf_prefers_dual_hits   # ONE test
-uv run pytest -k "rrf and not slow"             # by expression
+uv run pytest apps/search/tests/test_fusion.py::test_dual_hit_beats_a_single_hit_at_the_same_position   # ONE test
+uv run pytest -k "fusion and not slow"          # by expression
 uv run pytest -m slow                           # the excluded slow tests; needs the extra
 uv run pytest -x -q --lf                        # stop at first failure, rerun last failures
 
@@ -279,7 +294,9 @@ is reserved for recomputing vectors whose recorded model already matches.
 
 ### API shape
 
-Read-only and public. DRF throttling is on; ingestion is admin/CLI only.
+Read-only and public. `GET /api/search/` performs retrieval and
+`GET /api/health/` reports application and database health. DRF throttling is on;
+ingestion is admin/CLI only.
 Search results always carry an INSPIRE link built from `inspire_id`
 (`https://inspirehep.net/literature/<inspire_id>`).
 

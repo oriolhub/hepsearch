@@ -8,12 +8,6 @@
 #   docker compose down       stop it, KEEPING the data
 #   docker compose down -v    stop it and DESTROY the data (see AGENTS.md §5)
 
-# Pin the Compose project name so container and volume names never depend on
-# whatever the checkout directory happens to be called. Without this, the volume
-# would be named after the parent folder, and renaming the repository would
-# orphan the data.
-name: hepsearch
-
 services:
   db:
     # Pinned to an explicit tag that names the pgvector version, the PostgreSQL

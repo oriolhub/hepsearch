@@ -80,6 +80,7 @@ def semantic_search(
     downstream of ranking reads them. The distance expression still references
     `embedding` server-side, so the vector index is unaffected.
     """
+    limit = min(limit, settings.HYBRID_CANDIDATE_DEPTH)
     distance = CosineDistance("embedding", vector)
     similarity = ExpressionWrapper(Value(1.0) - distance, output_field=FloatField())
     return (

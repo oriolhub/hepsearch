@@ -155,6 +155,27 @@ def test_semantic_search_returns_empty_queryset_without_compatible_rows():
 
 
 @pytest.mark.django_db
+def test_semantic_search_is_capped_by_the_vector_index_scan_width():
+    for inspire_id in range(45):
+        make_paper(
+            inspire_id,
+            embedding=vector(0),
+            embedding_model="test-model",
+        )
+
+    results = list(
+        semantic_search(
+            Paper.objects.all(),
+            vector(0),
+            limit=60,
+            model_name="test-model",
+        )
+    )
+
+    assert len(results) == 40
+
+
+@pytest.mark.django_db
 def test_semantic_similarity_is_not_clamped():
     paper = make_paper(
         1,

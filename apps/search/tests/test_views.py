@@ -270,6 +270,29 @@ def test_semantic_search_uses_the_configured_provider_and_returns_score(client, 
 
 
 @pytest.mark.django_db
+def test_semantic_retrieval_can_have_a_smaller_total_without_a_warning(client, settings):
+    settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
+    registry.reset()
+    provider = FakeEmbeddingProvider()
+    embedding = provider.embed(["higgs"])[0]
+    for inspire_id in range(45):
+        make_paper(
+            inspire_id,
+            title="Higgs paper",
+            abstract="A study of the higgs boson.",
+            embedding=embedding,
+            embedding_model=provider.model_name,
+        )
+
+    keyword = client.get("/api/search/", {"q": "higgs", "mode": "keyword"}).json()
+    semantic = client.get("/api/search/", {"q": "higgs", "mode": "semantic"}).json()
+
+    assert keyword["count"] == 45
+    assert semantic["count"] == 40
+    assert "warning" not in semantic
+
+
+@pytest.mark.django_db
 def test_semantic_empty_corpus_returns_200(client, settings):
     settings.EMBEDDING_PROVIDER = "apps.embedding.fake.FakeEmbeddingProvider"
     registry.reset()
