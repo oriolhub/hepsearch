@@ -1,0 +1,75 @@
+# Lint and test on every push and pull request.
+#
+# The database is a service container, not Compose: GitHub Actions already owns
+# container lifecycle and health-gating, so compose.yaml would only duplicate it.
+# The image tag is pinned to the SAME tag as compose.yaml - CI and the local
+# development database must never drift apart.
+#
+# This workflow deliberately does NOT install the `local-embeddings` extra. The
+# default test run is offline and must never download a model (AGENTS.md §6), so
+# installing torch here would add gigabytes to buy nothing. `uv run pytest`
+# deselects the `slow` marker via pyproject's addopts.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  # A new push to the same branch makes the in-flight run obsolete.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint and test
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: pgvector/pgvector:0.8.6-pg17-trixie
+        env:
+          # POSTGRES_USER is a superuser in this image, which migration
+          # papers/0003 requires: `vector` is an untrusted extension and
+          # CREATE EXTENSION would otherwise be refused.
+          POSTGRES_DB: hepsearch
+          POSTGRES_USER: hepsearch
+          POSTGRES_PASSWORD: hepsearch
+        ports:
+          # Published on 5433 to match POSTGRES_PORT's default in config/settings.py,
+          # so Django needs no database environment variables here. Changing this
+          # port means changing that default too.
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U hepsearch -d hepsearch"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        # Pinned to an exact version: setup-uv publishes no floating major tag,
+        # so `@v10` does not resolve. Bump this deliberately.
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        # Installs the dev dependency-group (pytest, pytest-django, ruff) but not
+        # the local-embeddings extra. uv provisions the .python-version interpreter.
+        run: uv sync
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Test
+        # pytest-django creates the test database, which applies every migration -
+        # so this also covers CreateExtension("vector") and the HNSW index build.
+        run: uv run pytest
